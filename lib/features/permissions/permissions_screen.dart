@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
+import 'package:pawcus/core/services/service_locator.dart';
 
 class PermissionsScreen extends StatefulWidget {
   const PermissionsScreen({super.key});
@@ -9,7 +10,7 @@ class PermissionsScreen extends StatefulWidget {
 }
 
 class _PermissionsScreenState extends State<PermissionsScreen> {
-  final permissionsService = PermissionsService();
+  final permissionsService = sl<PermissionsService>();
 
   bool hasUsageAccess = false;
   bool hasOverlayPermission = false;
