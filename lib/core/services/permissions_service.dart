@@ -6,7 +6,9 @@ import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 /// A service that handles requesting and checking for permissions.
 class PermissionsService {
-  static const _channel = MethodChannel('com.scovillestudios.pawcus/permissions');
+  static const _channel = MethodChannel(
+    'com.scovillestudios.pawcus/permissions',
+  );
 
   /// Checks if the user has granted usage access permissions.
   Future<bool> hasUsageAccess() async {
@@ -31,5 +33,10 @@ class PermissionsService {
       action: 'android.settings.USAGE_ACCESS_SETTINGS',
     );
     await intent.launch();
+  }
+
+  Future<void> requestOverlayPermissions() async {
+    if (!Platform.isAndroid) return;
+    await FlutterOverlayWindow.requestPermission();
   }
 }

@@ -18,26 +18,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void checkPermissions() async {
+    if (!mounted) return;
     final permissionsService = PermissionsService();
     final hasUsageAccess = await permissionsService.hasUsageAccess();
+    final hasOverlayPermission = await permissionsService
+        .hasOverlayPermission();
 
     if (!hasUsageAccess) {
       await permissionsService.requestAppUsagePermissions();
+    }
+    if (!hasOverlayPermission) {
+      await permissionsService.requestOverlayPermissions();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('All permissions are granted')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('All permissions are granted')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pawcus'),
-        backgroundColor: Colors.green,
+      body: SafeArea(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: checkPermissions,
+              child: Text('Check Permissions'),
+            ),
+          ],
+        ),
       ),
-      body: Column(children: [
-        ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions'))
-      ],),
     );
   }
 }
