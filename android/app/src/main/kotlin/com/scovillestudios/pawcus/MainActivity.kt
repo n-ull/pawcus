@@ -11,6 +11,10 @@ import android.os.Process
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.scovillestudios.pawcus/permissions"
 
+    /**
+     * Registers a MethodChannel on the provided FlutterEngine and installs a method-call handler
+     * that responds to platform channel requests for checking app usage-access permission.
+     */
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
@@ -24,6 +28,11 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    /**
+     * Determines whether the app has permission to access device usage statistics.
+     *
+     * @return `true` if the app is allowed to read usage stats, `false` otherwise.
+     */
     private fun hasUsageAccess(): Boolean {
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
