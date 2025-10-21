@@ -8,10 +8,10 @@ class AppUsageService {
   ) async {
     try {
       return await AppUsage().getAppUsage(startPeriod, endPeriod);
-    } catch (exception) {
-      throw GetAppUsageException(
-        'Something went wrong: ${exception.toString()}',
-      );
+    } on AppUsageException catch (e) {
+      throw GetAppUsageException('Failed to retrieve app usage data: ${e.toString()}');
+    } catch (e) {
+      throw GetAppUsageException('Unexpected error retrieving app usage: ${e.toString()}');
     }
   }
 }
