@@ -1,18 +1,43 @@
+import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
-import 'package:pawcus/core/components/paw_scaffold.dart';
+import 'package:pawcus/core/services/permissions_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<AppUsageInfo> _infos = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void checkPermissions() async {
+    final permissionsService = PermissionsService();
+    final hasUsageAccess = await permissionsService.hasUsageAccess();
+
+    if (!hasUsageAccess) {
+      await permissionsService.requestAppUsagePermissions();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('All permissions are granted')));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const PawScaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Holi')
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Pawcus'),
+        backgroundColor: Colors.green,
       ),
+      body: Column(children: [
+        ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions'))
+      ],),
     );
   }
 }
