@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/router/router.dart';
+import 'package:pawcus/core/services/service_locator.dart';
 
-void main() {
+void main() async {
+  // revisar si flutter inicializó correctamente
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // mantener la posición de la pantalla de forma vertical
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // ejecutar service locator
+  await setupServiceLocator();
+
   runApp(MyApp());
 }
 
