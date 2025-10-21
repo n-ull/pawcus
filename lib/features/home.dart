@@ -1,5 +1,7 @@
 import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router_plus/go_router_plus.dart';
+import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,30 +12,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<AppUsageInfo> _infos = [];
-
   @override
   void initState() {
     super.initState();
-  }
-
-  void checkPermissions() async {
-    if (!mounted) return;
-    final permissionsService = PermissionsService();
-    final hasUsageAccess = await permissionsService.hasUsageAccess();
-    final hasOverlayPermission = await permissionsService
-        .hasOverlayPermission();
-
-    if (!hasUsageAccess) {
-      await permissionsService.requestAppUsagePermissions();
-    }
-    if (!hasOverlayPermission) {
-      await permissionsService.requestOverlayPermissions();
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('All permissions are granted')));
-    }
   }
 
   @override
@@ -43,7 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: checkPermissions,
+              onPressed: () {
+                context.pushNamed(Routes.permissions.name);
+              },
               child: Text('Check Permissions'),
             ),
           ],
