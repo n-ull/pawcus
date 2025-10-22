@@ -1,9 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/models/pet_stats.dart';
+import 'package:pawcus/core/services/app_usage_service.dart';
+import 'package:pawcus/core/services/permissions_service.dart';
 
 class PetService {
   late final ValueNotifier<Pet> pet;
+  final PermissionsService _permissionsService;
+  final AppUsageService _appUsageService;
+
+  PetService(this._appUsageService, this._permissionsService);
 
   Future<void> init() async {
     final loadedPet = await _loadPet();
@@ -38,5 +44,14 @@ class PetService {
   Future<void> _savePet() async {
     // TODO: Implement persistence (e.g., SharedPreferences or local database)
     // For now, this is a no-op to prevent crashes during development
+  }
+
+  Future<void> checkDailyAppUsage() async {
+    if (!await _permissionsService.hasUsageAccess()) return;
+
+    final usage = await _appUsageService.getAppsUsage(
+      DateTime.now().subtract(const Duration(days: 1)),
+      DateTime.now(),
+    );
   }
 }

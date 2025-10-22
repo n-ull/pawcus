@@ -12,7 +12,10 @@ Future<void> setupServiceLocator() async {
 
   // Init PetService
   sl.registerSingletonAsync<PetService>(() async {
-    final svc = PetService();
+    final svc = PetService(
+      sl<AppUsageService>(),
+      sl<PermissionsService>(),
+    );
     await svc.init();
     return svc;
   });
