@@ -1,8 +1,9 @@
-import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router_plus/go_router_plus.dart';
+import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/router/routes.dart';
-import 'package:pawcus/core/services/permissions_service.dart';
+import 'package:pawcus/core/services/pet_service.dart';
+import 'package:pawcus/core/services/service_locator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final pet = sl<PetService>().pet;
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 context.pushNamed(Routes.permissions.name);
               },
               child: Text('Check Permissions'),
+            ),
+            ValueListenableBuilder(
+              valueListenable: pet,
+              builder: (context, value, child) => Text(pet.value.name),
             ),
           ],
         ),
