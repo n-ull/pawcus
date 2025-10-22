@@ -9,14 +9,13 @@ Future<void> setupServiceLocator() async {
   // Load Dependencies
   sl.registerSingleton(AppUsageService());
   sl.registerSingleton(PermissionsService());
-  sl.registerSingleton(PetService());
 
   // Init PetService
-  try {
-    await sl<PetService>().init();
-  } catch (e, stackTrace) {
-    // Log the error or handle gracefully
-    print('Error initializing PetService: $e\n$stackTrace');
-    // Consider: rethrow or initialize with default state
-  }
+  sl.registerSingletonAsync<PetService>(() async {
+    final svc = PetService();
+    await svc.init();
+    return svc;
+  });
+
+  await sl.isReady<PetService>();
 }
