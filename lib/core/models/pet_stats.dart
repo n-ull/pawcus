@@ -1,10 +1,10 @@
 class PetStats {
-  double happiness; // 0.0 - 1.0
-  double energy; // 0.0 - 1.0
-  double hunger; // 0.0 - 1.0
-  double thirst; // 0.0 - 1.0
-  double sleep; // 0.0 - 1.0
-  double hygiene; // 0.0 - 1.0
+  final double happiness; // 0.0 - 1.0
+  final double energy; // 0.0 - 1.0
+  final double hunger; // 0.0 - 1.0
+  final double thirst; // 0.0 - 1.0
+  final double sleep; // 0.0 - 1.0
+  final double hygiene; // 0.0 - 1.0
 
   PetStats({
     required this.happiness,
@@ -13,5 +13,10 @@ class PetStats {
     required this.thirst,
     required this.sleep,
     required this.hygiene,
-  });
+  }) : assert(happiness >= 0.0 && happiness <= 1.0),
+       assert(energy >= 0.0 && energy <= 1.0),
+       assert(hunger >= 0.0 && hunger <= 1.0),
+       assert(thirst >= 0.0 && thirst <= 1.0),
+       assert(sleep >= 0.0 && sleep <= 1.0),
+       assert(hygiene >= 0.0 && hygiene <= 1.0);
 }

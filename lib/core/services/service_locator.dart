@@ -6,10 +6,17 @@ import 'package:pawcus/core/services/pet_service.dart';
 final GetIt sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
+  // Load Dependencies
   sl.registerSingleton(AppUsageService());
   sl.registerSingleton(PermissionsService());
-
   sl.registerSingleton(PetService());
-  await sl<PetService>().init();
 
+  // Init PetService
+  try {
+    await sl<PetService>().init();
+  } catch (e, stackTrace) {
+    // Log the error or handle gracefully
+    print('Error initializing PetService: $e\n$stackTrace');
+    // Consider: rethrow or initialize with default state
+  }
 }

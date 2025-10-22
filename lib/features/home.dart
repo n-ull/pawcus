@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ValueListenableBuilder(
               valueListenable: pet,
-              builder: (context, value, child) => Text(pet.value.name),
+              builder: (context, value, child) => Text(value.name),
             ),
           ],
         ),

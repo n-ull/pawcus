@@ -24,11 +24,16 @@ class PermissionsService {
   /// Checks if the user has granted overlay permissions.
   Future<bool> hasOverlayPermission() async {
     if (!Platform.isAndroid) return true;
-    return await FlutterOverlayWindow.isPermissionGranted();
+    try {
+      return await FlutterOverlayWindow.isPermissionGranted();
+    } catch (e) {
+      return false;
+    }
   }
 
   /// Requests app usage permissions from the user.
   Future<void> requestAppUsagePermissions() async {
+    if (!Platform.isAndroid) return;
     const intent = AndroidIntent(
       action: 'android.settings.USAGE_ACCESS_SETTINGS',
     );

@@ -11,8 +11,10 @@ class PetService {
   }
 
   void updatePetStats(PetStats newStats) {
-    pet.value.petStat = newStats;
-    pet.value.lastUpdate = DateTime.now();
+    pet.value = pet.value.copyWith(
+      petStat: newStats,
+      lastUpdate: DateTime.now(),
+    );
     _savePet();
   }
 
@@ -34,7 +36,7 @@ class PetService {
   }
 
   Future<void> _savePet() async {
-    // save a pet in cache
-    throw UnimplementedError("Method not implemented");
+    // TODO: Implement persistence (e.g., SharedPreferences or local database)
+    // For now, this is a no-op to prevent crashes during development
   }
 }
