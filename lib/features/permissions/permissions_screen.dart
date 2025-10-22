@@ -9,7 +9,8 @@ class PermissionsScreen extends StatefulWidget {
   State<PermissionsScreen> createState() => _PermissionsScreenState();
 }
 
-class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindingObserver {
+class _PermissionsScreenState extends State<PermissionsScreen>
+    with WidgetsBindingObserver {
   final permissionsService = sl<PermissionsService>();
 
   bool hasUsageAccess = false;
@@ -36,7 +37,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
     super.didChangeAppLifecycleState(state);
   }
 
-  void checkPermissions() async {
+  Future<void> checkPermissions() async {
     bool permissionUsage = await permissionsService.hasUsageAccess();
     bool permissionOverlay = await permissionsService.hasOverlayPermission();
 
@@ -56,18 +57,21 @@ class _PermissionsScreenState extends State<PermissionsScreen> with WidgetsBindi
           children: [
             ListTile(
               title: Text("Has Usage Access"),
-              trailing: Switch(value: hasUsageAccess, onChanged: (value) {
-                // TODO: is not being updated after change
-                permissionsService.requestAppUsagePermissions();
-              }),
+              trailing: Switch(
+                value: hasUsageAccess,
+                onChanged: (_)  async {
+                  await permissionsService.requestAppUsagePermissions();
+                  await checkPermissions();
+                },
+              ),
             ),
             ListTile(
               title: Text("Has Overlay Permission"),
               trailing: Switch(
                 value: hasOverlayPermission,
-                onChanged: (value) {
-                  // TODO: is not being updated after change
-                  permissionsService.requestOverlayPermissions();
+                onChanged: (_) async {
+                  await permissionsService.requestOverlayPermissions();
+                  await checkPermissions();
                 },
               ),
             ),
