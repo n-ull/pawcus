@@ -1,6 +1,7 @@
 import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/features/home.dart';
+import 'package:pawcus/features/login.dart';
 
 class AppRouter {
   GoRouter router() {
@@ -15,6 +16,11 @@ class AppRouter {
             return const HomeScreen();
           },
         ),
+        GoRoute(
+          path: Routes.login.path,
+          name: Routes.login.name,
+          builder: (context, state) => const LoginScreen(),
+        )
       ],
     );
   }

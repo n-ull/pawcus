@@ -1,5 +1,6 @@
 class Routes {
-static const home = _Route('/', 'Home');
+  static const home = _Route('/', 'Home');
+  static const login = _Route('/login', 'Login');
 }
 
 class _Route {

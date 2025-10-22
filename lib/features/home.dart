@@ -1,6 +1,11 @@
-import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
+
+import 'package:app_usage/app_usage.dart';
+import 'package:go_router_plus/go_router_plus.dart'
+;
+import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,8 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.green,
       ),
       body: Column(children: [
-        ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions'))
-      ],),
+        ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions')),
+        ElevatedButton(onPressed: () => context.go(Routes.login.path), child: Text('Login')),
+      ]),
     );
   }
 }
