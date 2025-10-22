@@ -1,4 +1,5 @@
 import 'package:app_usage/app_usage.dart';
+import 'package:pawcus/core/constants.dart';
 import 'package:pawcus/core/exceptions/app_usage_exceptions.dart';
 import 'package:pawcus/core/models/app_usage_entry.dart';
 
@@ -33,16 +34,7 @@ class AppUsageService {
   }
 
   bool isSystemApp(String packageName) {
-    final systemPrefixes = [
-      'com.android.',
-      'com.google.android.',
-      'com.samsung.',
-      'com.miui.',
-      'com.huawei.',
-      'com.oppo.',
-      'com.vivo.',
-      'com.motorola.',
-    ];
+    final systemPrefixes = AppConstants.systemAppPackages;
 
     return systemPrefixes.any((prefix) => packageName.startsWith(prefix));
   }

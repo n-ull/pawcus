@@ -1,10 +1,5 @@
-import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/models/app_usage_entry.dart';
-import 'package:pawcus/core/models/pet.dart';
-import 'package:pawcus/core/router/routes.dart';
-import 'package:pawcus/core/services/app_usage_service.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 
