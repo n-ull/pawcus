@@ -27,40 +27,72 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        iconSize: 32,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.pets_rounded), label: 'Pet'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement_rounded),
+            label: 'Focus',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_rounded),
+            label: 'Settings',
+          ),
+        ],
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                context.pushNamed(Routes.permissions.name);
-              },
-              child: Text('Check Permissions'),
-            ),
-            ValueListenableBuilder(
-              valueListenable: pet,
-              builder: (context, value, child) => Column(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text(pet.value.name, style: TextTheme.of(context).titleLarge),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(value.name),
-                  LabeledText(value.lastUpdate.toString(), 'Last Update: '),
-                  LabeledText(
-                    value.petStat.happiness.toString(),
-                    'Happiness: ',
+                  IconButton.filled(
+                    icon: Icon(Icons.bolt_rounded),
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green),
+                    ),
                   ),
-                  LabeledText(value.petStat.energy.toString(), 'Energy: '),
-                  LabeledText(value.petStat.hunger.toString(), 'Hunger: '),
-                  LabeledText(value.petStat.thirst.toString(), 'Thirst: '),
-                  LabeledText(value.petStat.sleep.toString(), 'Sleep: '),
-                  LabeledText(value.petStat.hygiene.toString(), 'Hygiene: '),
+                  IconButton.filled(
+                    icon: Icon(Icons.lunch_dining_rounded),
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green),
+                    ),
+                  ),
+                  IconButton.filled(
+                    icon: Icon(Icons.emoji_emotions_rounded),
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green),
+                    ),
+                  ),
+                  IconButton.filled(
+                    icon: Icon(Icons.bedtime),
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green),
+                    ),
+                  ),
                 ],
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                sl<PetService>().checkDailyAppUsage();
-              },
-              child: Text('Check Daily App Usage'),
-            ),
-          ],
+              SizedBox(height: 16),
+              Expanded(child: Center(child: Container(
+                height: 200,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.all(Radius.circular(100))
+                ),
+              ))),
+            ],
+          ),
         ),
       ),
     );
