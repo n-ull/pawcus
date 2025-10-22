@@ -7,4 +7,7 @@ class FakePermissionsService extends PermissionsService {
 
   @override
   Future<bool> hasUsageAccess() async => _hasAccess;
+
+  @override
+  Future<bool> hasOverlayPermission() async => _hasAccess;
 }
