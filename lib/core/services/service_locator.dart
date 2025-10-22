@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 import 'package:pawcus/core/services/app_usage_service.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
@@ -12,11 +14,15 @@ Future<void> setupServiceLocator() async {
 
   // Init PetService
   sl.registerSingletonAsync<PetService>(() async {
-    final svc = PetService(
-      sl<AppUsageService>(),
-      sl<PermissionsService>(),
-    );
-    await svc.init();
+    final svc = PetService(sl<AppUsageService>(), sl<PermissionsService>());
+
+    try {
+      await svc.init();
+    } catch (e, stackTrace) {
+      log('Failed to initialize PetService: $e\n$stackTrace');
+      rethrow;
+    }
+
     return svc;
   });
 
