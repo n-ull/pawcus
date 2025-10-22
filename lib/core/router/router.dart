@@ -1,6 +1,7 @@
 import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/features/home.dart';
+import 'package:pawcus/features/permissions/permissions_screen.dart';
 
 class AppRouter {
   GoRouter router() {
@@ -13,6 +14,13 @@ class AppRouter {
           name: Routes.home.name,
           builder: (context, state) {
             return const HomeScreen();
+          },
+        ),
+        GoRoute(
+          path: Routes.permissions.path,
+          name: Routes.permissions.name,
+          builder: (context, state) {
+            return const PermissionsScreen();
           },
         ),
       ],

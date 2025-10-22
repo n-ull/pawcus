@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:pawcus/core/services/api_client.dart';
+import 'package:pawcus/core/services/api/api_client.dart';
 
 class ApiService {
   final ApiClient _apiClient;
