@@ -19,4 +19,22 @@ class PetStats {
        assert(thirst >= 0.0 && thirst <= 1.0),
        assert(sleep >= 0.0 && sleep <= 1.0),
        assert(hygiene >= 0.0 && hygiene <= 1.0);
+
+  PetStats copyWith({
+    double? happiness,
+    double? energy,
+    double? hunger,
+    double? thirst,
+    double? sleep,
+    double? hygiene,
+  }) {
+    return PetStats(
+      happiness: happiness ?? this.happiness,
+      energy: energy ?? this.energy,
+      hunger: hunger ?? this.hunger,
+      thirst: thirst ?? this.thirst,
+      sleep: sleep ?? this.sleep,
+      hygiene: hygiene ?? this.hygiene,
+    );
+  }
 }

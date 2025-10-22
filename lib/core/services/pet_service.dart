@@ -9,7 +9,22 @@ class PetService {
   final PermissionsService _permissionsService;
   final AppUsageService _appUsageService;
 
-  PetService(this._appUsageService, this._permissionsService);
+  // Configurable thresholds / deltas to make behavior testable and tunable
+  final int thresholdSeconds;
+  final double happinessPenalty;
+  final double energyPenalty;
+  final double happinessReward;
+  final double energyReward;
+
+  PetService(
+    this._appUsageService,
+    this._permissionsService, {
+    this.thresholdSeconds = 2 * 60 * 60,
+    this.happinessPenalty = 0.2,
+    this.energyPenalty = 0.15,
+    this.happinessReward = 0.1,
+    this.energyReward = 0.05,
+  });
 
   Future<void> init() async {
     final loadedPet = await _loadPet();
@@ -53,5 +68,32 @@ class PetService {
       DateTime.now().subtract(const Duration(days: 1)),
       DateTime.now(),
     );
+
+    // Algorithm for demo/testing:
+    // - Sum total non-system app usage seconds during the period.
+    // - If totalUsageSeconds > thresholdSeconds, decrease happiness and energy.
+    // - Otherwise, slightly increase happiness/energy.
+    final totalUsageSeconds = usage.fold<int>(0, (s, e) => s + e.usageSeconds);
+
+    final currentStats = pet.value.petStat;
+    double newHappiness = currentStats.happiness;
+    double newEnergy = currentStats.energy;
+
+    if (totalUsageSeconds > thresholdSeconds) {
+      // heavy usage -> penalty
+      newHappiness = (newHappiness - happinessPenalty).clamp(0.0, 1.0);
+      newEnergy = (newEnergy - energyPenalty).clamp(0.0, 1.0);
+    } else {
+      // light usage -> reward
+      newHappiness = (newHappiness + happinessReward).clamp(0.0, 1.0);
+      newEnergy = (newEnergy + energyReward).clamp(0.0, 1.0);
+    }
+
+    final updated = currentStats.copyWith(
+      happiness: newHappiness,
+      energy: newEnergy,
+    );
+
+    updatePetStats(updated);
   }
 }
