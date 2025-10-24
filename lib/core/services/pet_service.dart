@@ -42,15 +42,15 @@ class PetService {
   Future<Pet> _loadPet() async {
     // mockup a pet
     return Pet(
-      id: "peter-1",
-      name: "Peter",
+      id: "erbs-1",
+      name: "Erbcito",
       lastUpdate: DateTime.now(),
       petStat: PetStats(
-        happiness: 0.5,
-        energy: 0.5,
-        hunger: 0.5,
+        happiness: 0.1,
+        energy: 0.9,
+        hunger: 0.2,
         thirst: 0.50,
-        sleep: 0.5,
+        sleep: 0.1,
         hygiene: 0.5,
       ),
     );
