@@ -145,7 +145,7 @@ class StatsRow extends StatelessWidget {
           StatBubble(
             data: pet.petStat.happiness,
             icon: Icons.emoji_emotions_rounded,
-            label: 'Energy',
+            label: 'Happiness',
           ),
           StatBubble(
             label: 'Sleep',
