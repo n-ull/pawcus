@@ -21,4 +21,22 @@ class Pet {
       petStat: petStat ?? this.petStat,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'lastUpdate': lastUpdate.millisecondsSinceEpoch,
+      'petStat': petStat.toMap(),
+    };
+  }
+
+  static Pet fromMap(Map<String, dynamic> map) {
+    return Pet(
+      id: map['id'],
+      name: map['name'],
+      lastUpdate: DateTime.fromMillisecondsSinceEpoch(map['lastUpdate']),
+      petStat: PetStats.fromMap(map['petStat']),
+    );
+  }
 }

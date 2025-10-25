@@ -34,35 +34,32 @@ class PetService {
     pet = ValueNotifier(loadedPet);
   }
 
-  void updatePetStats(PetStats newStats) {
+  Future<void> updatePetStats(PetStats newStats) async {
     pet.value = pet.value.copyWith(
       petStat: newStats,
       lastUpdate: DateTime.now(),
     );
-    _savePet();
+    await _savePet();
   }
 
   Future<Pet> _loadPet() async {
-    // mockup a pet
     return Pet(
-      id: "erbs-1",
-      name: "Erbcito",
+      id: 'p-1',
+      name: 'Erbcito',
       lastUpdate: DateTime.now(),
       petStat: PetStats(
-        happiness: 0.1,
-        energy: 0.9,
-        hunger: 0.2,
-        thirst: 0.50,
-        sleep: 0.1,
-        hygiene: 0.5,
+        happiness: 0.5,
+        energy: 0.5,
+        hunger: 0.3,
+        thirst: 0.3,
+        sleep: 0.3,
+        hygiene: 0.3,
       ),
     );
   }
 
   Future<void> _savePet() async {
-    // TODO: Implement persistence (e.g., SharedPreferences or local database)
-    // For now, this is a no-op to prevent crashes during development
-
+    await _cacheService.savePet(pet.value);
   }
 
   Future<void> checkDailyAppUsage() async {
@@ -98,6 +95,6 @@ class PetService {
       energy: newEnergy,
     );
 
-    updatePetStats(updated);
+    await updatePetStats(updated);
   }
 }

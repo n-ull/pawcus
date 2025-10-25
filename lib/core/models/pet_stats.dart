@@ -37,4 +37,26 @@ class PetStats {
       hygiene: hygiene ?? this.hygiene,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'happiness': happiness,
+      'energy': energy,
+      'hunger': hunger,
+      'thirst': thirst,
+      'sleep': sleep,
+      'hygiene': hygiene,
+    };
+  }
+
+  static PetStats fromMap(Map<String, dynamic> map) {
+    return PetStats(
+      happiness: map['happiness'],
+      energy: map['energy'],
+      hunger: map['hunger'],
+      thirst: map['thirst'],
+      sleep: map['sleep'],
+      hygiene: map['hygiene'],
+    );
+  }
 }
