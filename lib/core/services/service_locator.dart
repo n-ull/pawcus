@@ -35,6 +35,7 @@ Future<void> setupServiceLocator() async {
     }
   });
 
+  await sl.isReady<CacheService>();
   // Init PetService
   sl.registerSingletonAsync<PetService>(() async {
     final svc = PetService(
