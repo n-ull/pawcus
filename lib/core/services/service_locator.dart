@@ -15,7 +15,7 @@ Future<void> setupServiceLocator() async {
   // Load Dependencies
   sl.registerSingleton(AppUsageService());
   sl.registerSingleton(PermissionsService());
-  
+
   // Init CacheService
   sl.registerSingletonAsync<CacheService>(() async {
     try {
@@ -37,7 +37,11 @@ Future<void> setupServiceLocator() async {
 
   // Init PetService
   sl.registerSingletonAsync<PetService>(() async {
-    final svc = PetService(sl<AppUsageService>(), sl<PermissionsService>());
+    final svc = PetService(
+      sl<AppUsageService>(),
+      sl<PermissionsService>(),
+      sl<CacheService>(),
+    );
 
     try {
       await svc.init();

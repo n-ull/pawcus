@@ -2,12 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/models/pet_stats.dart';
 import 'package:pawcus/core/services/app_usage_service.dart';
+import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
 
 class PetService {
   late final ValueNotifier<Pet> pet;
   final PermissionsService _permissionsService;
   final AppUsageService _appUsageService;
+  final CacheService _cacheService;
 
   // Configurable thresholds / deltas to make behavior testable and tunable
   final int thresholdSeconds;
@@ -18,7 +20,8 @@ class PetService {
 
   PetService(
     this._appUsageService,
-    this._permissionsService, {
+    this._permissionsService,
+    this._cacheService, {
     this.thresholdSeconds = 2 * 60 * 60,
     this.happinessPenalty = 0.2,
     this.energyPenalty = 0.15,
@@ -59,6 +62,7 @@ class PetService {
   Future<void> _savePet() async {
     // TODO: Implement persistence (e.g., SharedPreferences or local database)
     // For now, this is a no-op to prevent crashes during development
+
   }
 
   Future<void> checkDailyAppUsage() async {
