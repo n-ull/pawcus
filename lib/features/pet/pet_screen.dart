@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:pawcus/core/components/stats_row.dart';
+import 'package:pawcus/core/models/pet.dart';
+import 'package:pawcus/core/services/pet_service.dart';
+import 'package:pawcus/core/services/service_locator.dart';
+
+class PetScreen extends StatelessWidget {
+  const PetScreen({super.key, required this.pet});
+
+  final ValueNotifier<Pet> pet;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+              ValueListenableBuilder<Pet>(
+                valueListenable: pet,
+                builder: (context, currentPet, child) {
+                  return StatsRow(pet: currentPet);
+                },
+              ),
+              SizedBox(height: 16),
+              Expanded(
+                child: Center(
+                  child: Image.asset('assets/pet.png'),
+                ),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  sl<PetService>().checkDailyAppUsage();
+                },
+                child: Text('Check Use Access'),
+              ),
+      ],
+          );
+  }
+}
