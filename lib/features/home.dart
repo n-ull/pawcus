@@ -1,3 +1,5 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcus/core/models/app_usage_entry.dart';
 import 'package:pawcus/core/models/pet.dart';
@@ -23,27 +25,36 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        iconSize: 32,
-        showUnselectedLabels: false,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.pets_rounded), label: 'Pet'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.self_improvement_rounded),
-            label: 'Focus',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_rounded),
-            label: 'Settings',
-          ),
+      backgroundColor: Colors.lightBlueAccent,
+      bottomNavigationBar: CurvedNavigationBar(
+        color: Colors.white,
+        buttonBackgroundColor: Colors.white,
+        backgroundColor: Colors.lightBlueAccent,
+        items: const [
+          Icon(CupertinoIcons.paw_solid),
+          Icon(CupertinoIcons.cloud),
+          Icon(CupertinoIcons.gear_solid),
         ],
+        animationCurve: Curves.bounceInOut,
+        animationDuration: Duration(milliseconds: 200),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Text(pet.value.name, style: TextTheme.of(context).titleLarge),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  pet.value.name,
+                  style: TextTheme.of(context).titleLarge,
+                ),
+              ),
+              SizedBox(height: 16),
               ValueListenableBuilder<Pet>(
                 valueListenable: pet,
                 builder: (context, currentPet, child) {
@@ -85,30 +96,37 @@ class StatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        StatBubble(
-          data: pet.petStat.energy,
-          icon: Icons.bolt_rounded,
-          label: 'Energy',
-        ),
-        StatBubble(
-          data: pet.petStat.hunger,
-          icon: Icons.lunch_dining_rounded,
-          label: 'Hunger',
-        ),
-        StatBubble(
-          data: pet.petStat.happiness,
-          icon: Icons.emoji_emotions_rounded,
-          label: 'Energy',
-        ),
-        StatBubble(
-          label: 'Sleep',
-          data: pet.petStat.sleep,
-          icon: Icons.nightlight_round_rounded,
-        ),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      padding: EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          StatBubble(
+            data: pet.petStat.energy,
+            icon: Icons.bolt_rounded,
+            label: 'Energy',
+          ),
+          StatBubble(
+            data: pet.petStat.hunger,
+            icon: Icons.lunch_dining_rounded,
+            label: 'Hunger',
+          ),
+          StatBubble(
+            data: pet.petStat.happiness,
+            icon: Icons.emoji_emotions_rounded,
+            label: 'Energy',
+          ),
+          StatBubble(
+            label: 'Sleep',
+            data: pet.petStat.sleep,
+            icon: Icons.nightlight_round_rounded,
+          ),
+        ],
+      ),
     );
   }
 }
