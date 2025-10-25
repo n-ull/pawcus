@@ -15,6 +15,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final pet = sl<PetService>().pet;
+
+  int _currentIndex = 0;
+  
   late List<AppUsageEntry> apps;
 
   @override
@@ -30,19 +33,46 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.white,
         buttonBackgroundColor: Colors.white,
         backgroundColor: Colors.lightBlueAccent,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         items: const [
           Icon(CupertinoIcons.paw_solid),
           Icon(CupertinoIcons.cloud),
           Icon(CupertinoIcons.gear_solid),
         ],
         animationCurve: Curves.bounceInOut,
-        animationDuration: Duration(milliseconds: 200),
+        animationDuration: const Duration(milliseconds: 200),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
+          child: _buildBody(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return <Widget>[
+      PetStats(pet: pet),
+      const Center(child: Text('Cloud Screen')),
+      const Center(child: Text('Settings Screen')),
+    ][_currentIndex];
+  }
+}
+
+class PetStats extends StatelessWidget {
+  const PetStats({super.key, required this.pet});
+
+  final ValueNotifier<Pet> pet;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -50,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  pet.value.name,
+                  pet.value.name, // Access the name from the ValueNotifier's value
                   style: TextTheme.of(context).titleLarge,
                 ),
               ),
@@ -81,11 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Text('Check Use Access'),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+      ],
+          );
   }
 }
 
