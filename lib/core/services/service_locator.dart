@@ -18,16 +18,21 @@ Future<void> setupServiceLocator() async {
   
   // Init CacheService
   sl.registerSingletonAsync<CacheService>(() async {
-    // initialize hive
-    final dir = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(dir.path);
-    final box = await Hive.openBox('cache');
+    try {
+      // initialize hive
+      final dir = await getApplicationDocumentsDirectory();
+      await Hive.initFlutter(dir.path);
+      final box = await Hive.openBox('cache');
 
-    // make the cacheclient and service
-    final cacheClient = CacheClient(box);
-    final svc = CacheService(cacheClient);
+      // make the cacheclient and service
+      final cacheClient = CacheClient(box);
+      final svc = CacheService(cacheClient);
 
-    return svc;
+      return svc;
+    } catch (e, stackTrace) {
+      log('Failed to initialize CacheService: $e\n$stackTrace');
+      rethrow;
+    }
   });
 
   // Init PetService
