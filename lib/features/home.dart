@@ -78,10 +78,10 @@ class PetStats extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(18),
                 ),
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Text(
                   pet.value.name, // Access the name from the ValueNotifier's value
-                  style: TextTheme.of(context).titleLarge,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               SizedBox(height: 16),
