@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pawcus/core/models/app_usage_entry.dart';
 import 'package:pawcus/core/services/pet_service.dart';
-import '../mocks/fake_box.dart';
 import '../mocks/fake_cache_service.dart';
 import '../mocks/fake_app_usage_service.dart';
 import '../mocks/fake_permissions_service.dart';
@@ -17,7 +16,7 @@ void main() {
 
     final appUsage = FakeAppUsageService(heavyEntries);
     final perms = FakePermissionsService(true);
-    final cache = FakeCacheService(FakeCacheClient(FakeBox({})));
+    final cache = FakeCacheService(FakeCacheClient());
     final service = PetService(appUsage, perms, cache);
     await service.init();
 
@@ -41,7 +40,7 @@ void main() {
 
     final appUsage = FakeAppUsageService(lightEntries);
     final perms = FakePermissionsService(true);
-    final cache = FakeCacheService(FakeCacheClient(FakeBox({})));
+    final cache = FakeCacheService(FakeCacheClient());
     final service = PetService(appUsage, perms, cache);
     await service.init();
 
@@ -63,7 +62,7 @@ void main() {
 
     final appUsage = FakeAppUsageService(entries);
     final perms = FakePermissionsService(false); // permission denied
-    final cache = FakeCacheService(FakeCacheClient(FakeBox({})));
+    final cache = FakeCacheService(FakeCacheClient());
     final service = PetService(appUsage, perms, cache);
     await service.init();
 
