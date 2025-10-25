@@ -9,8 +9,8 @@ class CacheClient {
     await _box.put(key, value);
   }
 
-  dynamic get(String key) {
-    return _box.get(key);
+  T? get<T>(String key, {T? defaultValue}) {
+    return _box.get(key, defaultValue: defaultValue) as T?;
   }
 
   Future<void> delete(String key) async {
