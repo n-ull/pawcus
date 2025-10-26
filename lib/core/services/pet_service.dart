@@ -59,7 +59,7 @@ class PetService {
   }
 
   Future<void> _savePet() async {
-    await _cacheService.savePet(pet.value);
+    // save pet
   }
 
   Future<void> checkDailyAppUsage() async {

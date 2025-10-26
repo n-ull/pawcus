@@ -1,4 +1,3 @@
-import 'fake_box.dart';
 import 'package:pawcus/core/services/cache/cache_client.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
 
@@ -7,13 +6,13 @@ import 'package:pawcus/core/services/cache/cache_service.dart';
 class FakeCacheService extends CacheService {
   final FakeCacheClient client;
 
-  FakeCacheService(this.client) : super(client);
+  FakeCacheService(this.client) : super();
 }
 
 class FakeCacheClient extends CacheClient {
   final Map<String, dynamic> _store = {};
 
-  FakeCacheClient() : super(FakeBox({}));
+  FakeCacheClient() : super();
 
   @override
   Future<void> set(String key, dynamic value) async {

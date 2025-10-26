@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 import 'package:pawcus/core/components/stats_row.dart';
 import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/models/pet_stats.dart';
-import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 
@@ -52,7 +51,7 @@ class PetScreen extends StatelessWidget {
                 // print the cache data
                 IconButton(
                   onPressed: () {
-                    sl<CacheService>().getPet();
+
                   },
                   icon: Icon(Icons.restore_rounded),
                 ),
