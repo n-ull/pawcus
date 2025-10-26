@@ -30,7 +30,7 @@ class CacheService {
     final name = prefs.getString('name') ?? 'Erbcito';
     final id = prefs.getString('id') ?? 'p-1';
     final lastUpdate = prefs.getString('lastUpdate') != null
-        ? DateTime.parse(prefs.getString('lastUpdate')!)
+        ? DateTime.tryParse(prefs.getString('lastUpdate')!) ?? DateTime.now()
         : DateTime.now();
 
     return Pet(id: id, name: name, lastUpdate: lastUpdate, petStat: petStats);
