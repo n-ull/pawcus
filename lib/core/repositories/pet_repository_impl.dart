@@ -3,7 +3,7 @@ import 'package:pawcus/core/repositories/pet_repository.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
 
 class PetRepositoryImpl implements PetRepository {
-  CacheService _cacheService;
+  final CacheService _cacheService;
 
   PetRepositoryImpl(this._cacheService);
 
