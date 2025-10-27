@@ -39,6 +39,9 @@ class FirebaseAuthService implements AuthService {
       if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
         throw AuthException('Invalid credentials');
       }
+      if (e.code == 'invalid-email') {
+        throw AuthException('E-mail is wrongly formatted');
+      }
       return null;
     }
   }
