@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.green,
       ),
       body: Padding(
-        padding: EdgeInsetsGeometry.all(25),
+        padding: EdgeInsets.all(25),
         child: Form(
           key: _formKey,
           child: Column(
