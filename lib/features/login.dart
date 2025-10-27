@@ -25,8 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pawcus | Login'),
-        backgroundColor: Colors.green,
+        title: const Text(
+          'Pawcus | Login',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.lightBlueAccent,
       ),
       body: Padding(
         padding: EdgeInsets.all(25),
