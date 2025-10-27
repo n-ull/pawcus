@@ -17,9 +17,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final pet = sl<PetService>().pet;
+  final PageController _pageController = PageController();
 
   int _currentIndex = 0;
-  
+
   late List<AppUsageEntry> apps;
 
   @override
@@ -35,10 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.white,
         buttonBackgroundColor: Colors.white,
         backgroundColor: Color(0xFF74c9ff),
+        index: _currentIndex,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
+          _pageController.jumpToPage(index);
         },
         items: const [
           Icon(CupertinoIcons.paw_solid),
@@ -48,19 +51,20 @@ class _HomeScreenState extends State<HomeScreen> {
         animationCurve: Curves.bounceInOut,
         animationDuration: const Duration(milliseconds: 200),
       ),
-      body: _buildBody(),
+      body: PageView(
+        onPageChanged: (value) {
+          setState(() {
+            _currentIndex = value;
+          });
+        },
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          PetScreen(pet: pet),
+          FocusScreen(),
+          SettingsScreen(),
+        ],
+      ),
     );
   }
-
-  Widget _buildBody() {
-    return <Widget>[
-      PetScreen(pet: pet),
-      FocusScreen(),
-      SettingsScreen(),
-    ][_currentIndex];
-  }
 }
-
-
-
-
