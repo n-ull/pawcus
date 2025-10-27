@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app_usage/app_usage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 
 import 'package:pawcus/core/models/app_usage_entry.dart';
-import 'package:pawcus/core/router/routes.dart';
-import 'package:pawcus/core/services/permissions_service.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/focus/focus_screen.dart';
@@ -43,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
         buttonBackgroundColor: Colors.white,
         backgroundColor: Colors.lightBlueAccent,
         onTap: (index) {
+          if (index == 3) {
+            context.go("/login");
+            return;
+          }
           setState(() {
             _currentIndex = index;
           });
@@ -62,10 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: _buildBody(),
         ),
       ),
-      // body: Column(children: [
-      //   ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions')),
-      //   ElevatedButton(onPressed: () => context.go(Routes.login.path), child: Text('Login')),
-      // ]),
     );
   }
 
@@ -77,7 +74,3 @@ class _HomeScreenState extends State<HomeScreen> {
     ][_currentIndex];
   }
 }
-
-
-
-
