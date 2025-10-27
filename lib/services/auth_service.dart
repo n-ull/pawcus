@@ -37,11 +37,13 @@ class FirebaseAuthService implements AuthService {
         email: email,
         password: password,
       );
-      if (credential.user?.email == null) {
+      final user = credential.user;
+      final userEmail = user?.email;
+      if (userEmail == null) {
         // We shouldn't reach this point. Users should always have an email in our app
         throw const AuthException('User email is not available');
       }
-      return AppUser(email: credential.user!.email!);
+      return AppUser(email: userEmail);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
         throw const AuthException('Invalid credentials');

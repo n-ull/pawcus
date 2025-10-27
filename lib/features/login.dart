@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final _authService = FirebaseAuthService();
   bool _loading = false;
 
   @override
@@ -48,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    if (!RegExp(r'^[\w\.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$').hasMatch(value)) {
+                    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
                       return 'Please enter a valid email';
                     }
                     return null;
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     String message = 'An unexpected error occurred';
                     AppUser? user;
                     try {
-                      user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
+                      user = await _authService.signIn(emailController.text, passwordController.text);
                       message = 'Logged in successfully as ${user.email}';
                     } on AuthException catch(e) {
                       message = 'Login failed: ${e.message}';
