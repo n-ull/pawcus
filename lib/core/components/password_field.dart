@@ -32,7 +32,7 @@ class _PasswordFieldState extends State<PasswordField> {
           onTap: () => setState(() => _visible = !_visible),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(_visible ? ':hide:' : ':show:'),
+            child: Icon(_visible ? Icons.visibility_off : Icons.visibility),
           ),
         ),
       ],
