@@ -34,32 +34,43 @@ class FirebaseAuthService implements AuthService {
         email: email,
         password: password,
       );
+      if (credential.user?.email == null) {
+        // We shouldn't reach this point. Users should always have an email in our app
+        throw AuthException('User email is not available');
+      }
       return AppUser(email: credential.user!.email!);
     } on FirebaseAuthException catch(e) {
-      if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
+      if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
         throw AuthException('Invalid credentials');
       }
       if (e.code == 'invalid-email') {
         throw AuthException('E-mail is wrongly formatted');
       }
-      return null;
+    } catch(e) {
+      // Handle unexpected errors
+      throw AuthException('An unexpected error occured during sign in');
     }
-  }
-
-  @override
-  Future<AppUser?> signUp(String email, String password) async {
     return null;
   }
 
   @override
+  Future<AppUser?> signUp(String email, String password) async {
+    throw UnimplementedError('Sign up is not yet implemented');
+  }
+
+  @override
   Future<void> signOut() async {
-    
+    throw UnimplementedError('Sign out is not yet implemented');
   }
 
   @override
   AppUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return null;
+    if (user.email == null) {
+        // We shouldn't reach this point. Users should always have an email in our app
+      throw AuthException('User email is not available');
+    }
     return AppUser(email: user.email!);
   }
 }

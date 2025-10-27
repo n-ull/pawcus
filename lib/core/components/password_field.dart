@@ -28,12 +28,10 @@ class _PasswordFieldState extends State<PasswordField> {
             hintText: widget.placeholder ?? 'Password',
           ),
         )),
-        GestureDetector(
-          onTap: () => setState(() => _visible = !_visible),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Icon(_visible ? Icons.visibility_off : Icons.visibility),
-          ),
+        IconButton(
+          onPressed: () => setState(() => _visible = !_visible),
+          icon: Icon(_visible ? Icons.visibility_off : Icons.visibility),
+          tooltip: _visible ? 'Hide password' : 'Show password',
         ),
       ],
     );

@@ -16,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool loggedIn = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -67,13 +66,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () async {
                   if (!_formKey.currentState!.validate()) return;
 
-                  String message;
+                  String message = 'An unexpected error occured';
                   AppUser? user;
                   try {
                     user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
-                    message = 'Logged in successfully as ${user!.email}';
                   } on AuthException catch(e) {
-                    message = e.toString();
+                    message = 'Login failed: ${e.toString()}';
+                  }
+
+                  if (user != null) {
+                    message = 'Logged in successfully as ${user.email}';
+                  } else {
+                    message = "Login failed: couldn't fetch user";
                   }
 
                   if (!context.mounted) return;
