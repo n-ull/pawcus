@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 
-class User {
+class AppUser {
   final String email;
 
-  const User({required this.email});
+  const AppUser({required this.email});
 }
 
 
@@ -19,22 +19,22 @@ class AuthException implements Exception {
 
 
 abstract class AuthService {
-  Future<User?> signIn(String email, String password);
-  Future<User?> signUp(String email, String password);
+  Future<AppUser?> signIn(String email, String password);
+  Future<AppUser?> signUp(String email, String password);
   Future<void> signOut();
-  User? get currentUser;
+  AppUser? get currentUser;
 }
 
 
 class FirebaseAuthService implements AuthService {
   @override
-  Future<User?> signIn(String email, String password) async {
+  Future<AppUser?> signIn(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return User(email: credential.user!.email!);
+      return AppUser(email: credential.user!.email!);
     } on FirebaseAuthException catch(e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
         throw AuthException('Invalid credentials');
@@ -47,7 +47,7 @@ class FirebaseAuthService implements AuthService {
   }
 
   @override
-  Future<User?> signUp(String email, String password) async {
+  Future<AppUser?> signUp(String email, String password) async {
     return null;
   }
 
@@ -57,9 +57,9 @@ class FirebaseAuthService implements AuthService {
   }
 
   @override
-  User? get currentUser {
+  AppUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return null;
-    return User(email: user.email!);
+    return AppUser(email: user.email!);
   }
 }

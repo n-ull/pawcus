@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: Padding(
-        padding: EdgeInsets.all(25),
+        padding: const EdgeInsets.all(25),
         child: Form(
           key: _formKey,
           child: Column(
@@ -43,6 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
+                  }
+                  if (!RegExp(r'^[\w\.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$').hasMatch(value)) {
+                    return 'Please enter a valid email';
                   }
                   return null;
                 },
@@ -65,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (!_formKey.currentState!.validate()) return;
 
                   String message;
-                  User? user;
+                  AppUser? user;
                   try {
                     user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
                     message = 'Logged in successfully as ${user!.email}';
