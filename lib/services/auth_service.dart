@@ -19,8 +19,8 @@ class AuthException implements Exception {
 
 
 abstract class AuthService {
-  Future<AppUser?> signIn(String email, String password);
-  Future<AppUser?> signUp(String email, String password);
+  Future<AppUser> signIn(String email, String password);
+  Future<AppUser> signUp(String email, String password);
   Future<void> signOut();
   AppUser? get currentUser;
 }
@@ -28,7 +28,7 @@ abstract class AuthService {
 
 class FirebaseAuthService implements AuthService {
   @override
-  Future<AppUser?> signIn(String email, String password) async {
+  Future<AppUser> signIn(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -46,15 +46,12 @@ class FirebaseAuthService implements AuthService {
       if (e.code == 'invalid-email') {
         throw AuthException('E-mail is wrongly formatted');
       }
-    } catch(e) {
-      // Handle unexpected errors
-      throw AuthException('An unexpected error occured during sign in');
     }
-    return null;
+    throw AuthException('An unexpected error occured during sign in');
   }
 
   @override
-  Future<AppUser?> signUp(String email, String password) async {
+  Future<AppUser> signUp(String email, String password) async {
     throw UnimplementedError('Sign up is not yet implemented');
   }
 

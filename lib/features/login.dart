@@ -66,18 +66,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () async {
                   if (!_formKey.currentState!.validate()) return;
 
-                  String message = 'An unexpected error occured';
+                  String message = 'An unexpected error occurred';
                   AppUser? user;
                   try {
                     user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
+                    message = 'Logged in successfully as ${user.email}';
                   } on AuthException catch(e) {
                     message = 'Login failed: ${e.toString()}';
-                  }
-
-                  if (user != null) {
-                    message = 'Logged in successfully as ${user.email}';
-                  } else {
-                    message = "Login failed: couldn't fetch user";
                   }
 
                   if (!context.mounted) return;
@@ -95,5 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }
