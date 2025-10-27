@@ -15,6 +15,9 @@ class _PermissionsScreenState extends State<PermissionsScreen>
 
   bool hasUsageAccess = false;
   bool hasOverlayPermission = false;
+  double _appUsageThreshold = 10;
+
+  /// minutes
 
   @override
   void initState() {
@@ -49,35 +52,59 @@ class _PermissionsScreenState extends State<PermissionsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListTile(
-              title: Text("Has Usage Access"),
-              trailing: Switch(
-                value: hasUsageAccess,
-                onChanged: (_)  async {
-                  await permissionsService.requestAppUsagePermissions();
-                  await checkPermissions();
-                },
-              ),
-            ),
-            ListTile(
-              title: Text("Has Overlay Permission"),
-              trailing: Switch(
-                value: hasOverlayPermission,
-                onChanged: (_) async {
-                  await permissionsService.requestOverlayPermissions();
-                  await checkPermissions();
-                },
-              ),
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ListTile(
+          title: Text("Deep Focus"),
+          subtitle: Text("Prevents you from using non-productive apps."),
+          trailing: Switch(value: false, onChanged: (value) {}),
         ),
-      ),
+        ListTile(
+          title: Text("Has Usage Access"),
+          subtitle: Text("This is useful for tracking app usage."),
+          trailing: Switch(
+            value: hasUsageAccess,
+            onChanged: (_) async {
+              await permissionsService.requestAppUsagePermissions();
+              await checkPermissions();
+            },
+          ),
+        ),
+        ListTile(
+          title: Text("Has Overlay Permission"),
+          subtitle: Text("This is useful for ..."),
+          trailing: Switch(
+            value: hasOverlayPermission,
+            onChanged: (_) async {
+              await permissionsService.requestOverlayPermissions();
+              await checkPermissions();
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text("App Usage Threshold: ${_appUsageThreshold.round()} minutes"),
+              Slider(
+                value: _appUsageThreshold,
+                max: 40,
+                min: 10,
+                divisions: 4,
+                label: _appUsageThreshold.round().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _appUsageThreshold = value;
+                  });
+                },
+              ),
+              Text("")
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
