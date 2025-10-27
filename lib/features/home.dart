@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:app_usage/app_usage.dart';
-import 'package:go_router_plus/go_router_plus.dart'
-;
+import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
 
