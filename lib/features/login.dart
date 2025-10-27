@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   if (user != null) context.go(Routes.home.path);
                 },
-                child: const Text("Login!"),
+                child: const Text("Login"),
               )
             ]
           ),
