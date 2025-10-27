@@ -37,12 +37,14 @@ class CacheService {
   }
 
   Future<void> savePetStats(PetStats petStats) async {
-    await prefs.setDouble('happiness', petStats.happiness);
-    await prefs.setDouble('energy', petStats.energy);
-    await prefs.setDouble('hunger', petStats.hunger);
-    await prefs.setDouble('thirst', petStats.thirst);
-    await prefs.setDouble('sleep', petStats.sleep);
-    await prefs.setDouble('hygiene', petStats.hygiene);
+    await Future.wait([
+      prefs.setDouble('happiness', petStats.happiness),
+      prefs.setDouble('energy', petStats.energy),
+      prefs.setDouble('hunger', petStats.hunger),
+      prefs.setDouble('thirst', petStats.thirst),
+      prefs.setDouble('sleep', petStats.sleep),
+      prefs.setDouble('hygiene', petStats.hygiene),
+    ]);
   }
 
   Future<void> savePet(Pet pet) async {
