@@ -40,6 +40,7 @@ class PermissionsService {
     await intent.launch();
   }
 
+  /// Requests overlay permissions from the user.
   Future<void> requestOverlayPermissions() async {
     if (!Platform.isAndroid) return;
     await FlutterOverlayWindow.requestPermission();
