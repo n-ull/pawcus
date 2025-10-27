@@ -27,27 +27,38 @@ abstract class AuthService {
 
 
 class FirebaseAuthService implements AuthService {
+  final FirebaseAuth _auth;
+  FirebaseAuthService({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
+
   @override
   Future<AppUser> signIn(String email, String password) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       if (credential.user?.email == null) {
         // We shouldn't reach this point. Users should always have an email in our app
-        throw AuthException('User email is not available');
+        throw const AuthException('User email is not available');
       }
       return AppUser(email: credential.user!.email!);
-    } on FirebaseAuthException catch(e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
-        throw AuthException('Invalid credentials');
+        throw const AuthException('Invalid credentials');
       }
       if (e.code == 'invalid-email') {
-        throw AuthException('E-mail is wrongly formatted');
+        throw const AuthException('E-mail is wrongly formatted');
       }
+      if (e.code == 'too-many-requests') {
+        throw const AuthException('Too many attempts. Try again later');
+      }
+      if (e.code == 'user-disabled') {
+        throw const AuthException('Account is disabled');
+      }
+      throw AuthException('Authentication failed: ${e.message ?? e.code}');
+    } catch (e) {
+      throw const AuthException('An unexpected error occurred during sign in');
     }
-    throw AuthException('An unexpected error occured during sign in');
   }
 
   @override
@@ -62,12 +73,8 @@ class FirebaseAuthService implements AuthService {
 
   @override
   AppUser? get currentUser {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return null;
-    if (user.email == null) {
-        // We shouldn't reach this point. Users should always have an email in our app
-      throw AuthException('User email is not available');
-    }
+    final user = _auth.currentUser;
+    if (user == null || user.email == null) return null;
     return AppUser(email: user.email!);
   }
 }

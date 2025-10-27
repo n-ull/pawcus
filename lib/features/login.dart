@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,62 +31,74 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Text("Login"),
-              TextFormField(
-                controller: emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(r'^[\w\.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$').hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Enter your email',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Text("Login"),
+                TextFormField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.email],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(r'^[\w\.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$').hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'you@example.com',
+                  ),
                 ),
-              ),
-              PasswordField(
-                controller: passwordController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-                placeholder: 'Enter your password',
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (!_formKey.currentState!.validate()) return;
+                PasswordField(
+                  controller: passwordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                  placeholder: 'Enter your password',
+                ),
+                ElevatedButton(
+                  onPressed: _loading ? null : () async {
+                    if (!_formKey.currentState!.validate()) return;
 
-                  String message = 'An unexpected error occurred';
-                  AppUser? user;
-                  try {
-                    user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
-                    message = 'Logged in successfully as ${user.email}';
-                  } on AuthException catch(e) {
-                    message = 'Login failed: ${e.toString()}';
-                  }
+                    setState(() => _loading = true);
 
-                  if (!context.mounted) return;
+                    String message = 'An unexpected error occurred';
+                    AppUser? user;
+                    try {
+                      user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
+                      message = 'Logged in successfully as ${user.email}';
+                    } on AuthException catch(e) {
+                      message = 'Login failed: ${e.message}';
+                    } finally {
+                      if (mounted) setState(() => _loading = false);
+                    }
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(message)),
-                  );
+                    if (!context.mounted) return;
 
-                  if (user != null) context.go(Routes.home.path);
-                },
-                child: const Text("Login"),
-              )
-            ]
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(message)),
+                    );
+
+                    if (user != null) context.go(Routes.home.path);
+                  },
+                  child: _loading ?
+                    const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Text("Login"),
+                )
+              ]
+            ),
           ),
         ),
       ),
