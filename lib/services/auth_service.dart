@@ -8,26 +8,55 @@ class User {
 }
 
 
-class AuthService {
-  static Future<String> login(String email, String password) async {
-    print(email);
-    print(password);
+class AuthException implements Exception {
+  final String message;
+
+  const AuthException(this.message);
+
+  @override
+  String toString() => 'Auth error: $message';
+}
+
+
+abstract class AuthService {
+  Future<User?> signIn(String email, String password);
+  Future<User?> signUp(String email, String password);
+  Future<void> signOut();
+  User? get currentUser;
+}
+
+
+class FirebaseAuthService implements AuthService {
+  @override
+  Future<User?> signIn(String email, String password) async {
     try {
-      final _ = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return 'Logged in succesfully.';
+      return User(email: credential.user!.email!);
     } on FirebaseAuthException catch(e) {
-      print(e);
-      if (e.code == 'user-not-found') {
-        return 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        return 'Wrong password provided for that user.';
-      } else if (e.code == 'invalid-credential') {
-        return 'Wrong password provided for that user.';
+      if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
+        throw AuthException('Invalid credentials');
       }
-      return 'Unknown error';
+      return null;
     }
+  }
+
+  @override
+  Future<User?> signUp(String email, String password) async {
+    return null;
+  }
+
+  @override
+  Future<void> signOut() async {
+    
+  }
+
+  @override
+  User? get currentUser {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+    return User(email: user.email!);
   }
 }

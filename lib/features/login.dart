@@ -58,7 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () async {
                   if (!_formKey.currentState!.validate()) return;
 
-                  final message = await AuthService.login(emailController.text, passwordController.text);
+                  String message;
+                  try {
+                    final user = await FirebaseAuthService().signIn(emailController.text, passwordController.text);
+                    message = 'Logged in successfully as ${user!.email}';
+                  } on AuthException catch(e) {
+                    message = e.toString();
+                  }
 
                   if (!context.mounted) return;
 
