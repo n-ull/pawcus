@@ -1,9 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_usage/app_usage.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:go_router_plus/go_router_plus.dart';
+
+import 'package:pawcus/core/models/app_usage_entry.dart';
 import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
+import 'package:pawcus/core/services/pet_service.dart';
+import 'package:pawcus/core/services/service_locator.dart';
+import 'package:pawcus/features/focus/focus_screen.dart';
+import 'package:pawcus/features/pet/pet_screen.dart';
+import 'package:pawcus/features/settings/settings_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -14,35 +23,61 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<AppUsageInfo> _infos = [];
+  final pet = sl<PetService>().pet;
+
+  int _currentIndex = 0;
+  
+  late List<AppUsageEntry> apps;
 
   @override
   void initState() {
     super.initState();
   }
 
-  void checkPermissions() async {
-    final permissionsService = PermissionsService();
-    final hasUsageAccess = await permissionsService.hasUsageAccess();
-
-    if (!hasUsageAccess) {
-      await permissionsService.requestAppUsagePermissions();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('All permissions are granted')));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pawcus'),
-        backgroundColor: Colors.green,
+      backgroundColor: Colors.lightBlueAccent,
+      bottomNavigationBar: CurvedNavigationBar(
+        color: Colors.white,
+        buttonBackgroundColor: Colors.white,
+        backgroundColor: Colors.lightBlueAccent,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          Icon(CupertinoIcons.paw_solid),
+          Icon(CupertinoIcons.cloud),
+          Icon(CupertinoIcons.gear_solid),
+          Icon(CupertinoIcons.arrow_right_circle_fill),
+        ],
+        animationCurve: Curves.bounceInOut,
+        animationDuration: const Duration(milliseconds: 200),
       ),
-      body: Column(children: [
-        ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions')),
-        ElevatedButton(onPressed: () => context.go(Routes.login.path), child: Text('Login')),
-      ]),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: _buildBody(),
+        ),
+      ),
+      // body: Column(children: [
+      //   ElevatedButton(onPressed: checkPermissions, child: Text('Check Permissions')),
+      //   ElevatedButton(onPressed: () => context.go(Routes.login.path), child: Text('Login')),
+      // ]),
     );
   }
+
+  Widget _buildBody() {
+    return <Widget>[
+      PetScreen(pet: pet),
+      FocusScreen(),
+      SettingsScreen(),
+    ][_currentIndex];
+  }
 }
+
+
+
+
