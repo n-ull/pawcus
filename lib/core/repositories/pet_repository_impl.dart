@@ -8,7 +8,7 @@ class PetRepositoryImpl implements PetRepository {
   PetRepositoryImpl(this._cacheService);
 
   @override
-  Future<Pet?> getPet(String id) {
+  Pet? getPet(String id) {
     return _cacheService.getPet();
   }
 

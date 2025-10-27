@@ -24,7 +24,7 @@ class CacheService {
   CacheService(this.prefs);
 
   // Obtains only the pet stats from the shared preferences
-  Future<PetStats> getPetStats() async {
+  PetStats getPetStats() {
     final double happiness =
         prefs.getDouble(_keyHappiness) ?? _defaultStatValue;
     final double energy = prefs.getDouble(_keyEnergy) ?? _defaultStatValue;
@@ -44,8 +44,8 @@ class CacheService {
   }
 
   // Obtains the pet from local shared preferences
-  Future<Pet> getPet() async {
-    final petStats = await getPetStats();
+  Pet getPet() {
+    final petStats = getPetStats();
     final name = prefs.getString(_keyName) ?? _defaultPetName;
     final id = prefs.getString(_keyId) ?? _defaultPetId;
     final lastUpdate = prefs.getString(_keyLastUpdate) != null
@@ -58,12 +58,12 @@ class CacheService {
   // Saves only the pet stats to local shared preferences
   Future<void> savePetStats(PetStats petStats) async {
     await Future.wait([
-      prefs.setDouble('happiness', petStats.happiness),
-      prefs.setDouble('energy', petStats.energy),
-      prefs.setDouble('hunger', petStats.hunger),
-      prefs.setDouble('thirst', petStats.thirst),
-      prefs.setDouble('sleep', petStats.sleep),
-      prefs.setDouble('hygiene', petStats.hygiene),
+      prefs.setDouble(_keyHappiness, petStats.happiness),
+      prefs.setDouble(_keyEnergy, petStats.energy),
+      prefs.setDouble(_keyHunger, petStats.hunger),
+      prefs.setDouble(_keyThirst, petStats.thirst),
+      prefs.setDouble(_keySleep, petStats.sleep),
+      prefs.setDouble(_keyHygiene, petStats.hygiene),
     ]);
   }
 
@@ -71,9 +71,9 @@ class CacheService {
   Future<void> savePet(Pet pet) async {
     await Future.wait([
       savePetStats(pet.petStat),
-      prefs.setString('name', pet.name),
-      prefs.setString('id', pet.id),
-      prefs.setString('lastUpdate', pet.lastUpdate.toIso8601String()),
+      prefs.setString(_keyName, pet.name),
+      prefs.setString(_keyId, pet.id),
+      prefs.setString(_keyLastUpdate, pet.lastUpdate.toIso8601String()),
     ]);
   }
 }
