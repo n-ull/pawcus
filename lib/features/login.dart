@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:go_router_plus/go_router_plus.dart';
+
 import 'package:pawcus/core/components/password_field.dart';
+import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/services/auth_service.dart';
 
 
@@ -71,6 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(message)),
                   );
+
+                  if (user != null) context.go(Routes.home.path);
                 },
                 child: const Text("Login!"),
               )
