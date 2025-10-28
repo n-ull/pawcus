@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 
-class PermissionsScreen extends StatefulWidget {
-  const PermissionsScreen({super.key});
+class PermissionsWidget extends StatefulWidget {
+  const PermissionsWidget({super.key});
 
   @override
-  State<PermissionsScreen> createState() => _PermissionsScreenState();
+  State<PermissionsWidget> createState() => _PermissionsWidgetState();
 }
 
-class _PermissionsScreenState extends State<PermissionsScreen>
+class _PermissionsWidgetState extends State<PermissionsWidget>
     with WidgetsBindingObserver {
   final permissionsService = sl<PermissionsService>();
 
