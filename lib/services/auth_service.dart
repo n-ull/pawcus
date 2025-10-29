@@ -57,7 +57,7 @@ class FirebaseAuthService implements AuthService {
       if (e.code == 'user-disabled') {
         throw const AuthException('Account is disabled');
       }
-      throw AuthException('Authentication failed: ${e.message ?? e.code}');
+      throw AuthException(e.message ?? e.code);
     } catch (e) {
       throw const AuthException('An unexpected error occurred during sign in');
     }
@@ -86,7 +86,7 @@ class FirebaseAuthService implements AuthService {
       }
       throw AuthException(e.message ?? e.code);
     } catch (e) {
-      throw const AuthException('An unexpected error occurred during sign in');
+      throw const AuthException('An unexpected error occurred during sign up');
     }
   }
 

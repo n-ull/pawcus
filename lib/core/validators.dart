@@ -14,11 +14,10 @@ FormFieldValidator<T> composeValidators<T>(List<FormFieldValidator<T>> validator
 
 FormFieldValidator<String> validateLength(int min, {int? max}) {
   return (String? value) {
-    if (value == null && min > 0) {
-      return "This field can't be empty";
+    if (value == null || value.isEmpty) {
+      if (min > 0) return "This field can't be empty";
+      return null;
     }
-
-    value = value!;
 
     if (value.length < min) {
       return 'Value must be at least $min characters long';
