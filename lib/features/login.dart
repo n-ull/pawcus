@@ -8,12 +8,20 @@ import 'package:pawcus/core/validators.dart';
 import 'package:pawcus/services/auth_service.dart';
 
 
+enum AuthAction {
+  signIn,
+  signUp,
+}
+
+
 const minPasswordLength = 8;
 const maxPasswordLength = 128;
 
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  final AuthAction action;
+
+  const AuthScreen({super.key, this.action = AuthAction.signIn});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -26,16 +34,35 @@ class _AuthScreenState extends State<AuthScreen> {
   final passwordController = TextEditingController();
   final _authService = FirebaseAuthService();
   bool _loading = false;
+  late AuthAction currentAction;
+
+  @override
+  void initState() {
+    super.initState();
+    currentAction = widget.action;
+  }
 
   @override
   Widget build(BuildContext context) {
+    String title;
+    List<Widget> Function(BuildContext) bodyBuilder;
+    if (currentAction == AuthAction.signIn) {
+      title = 'Sign in';
+      bodyBuilder = buildSignInBody;
+    } else {
+      title = 'Sign up';
+      bodyBuilder = buildSignUpBody;
+    }
+
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text(
-          'Pawcus | Auth',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          'Pawcus | $title',
+          style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: theme.colorScheme.primary,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -43,7 +70,7 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Form(
             key: _formKey,
             child: Column(
-              children: buildSignUpBody(context),
+              children: bodyBuilder(context),
             ),
           ),
         ),
@@ -60,7 +87,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   List<Widget> buildSignInBody(BuildContext context) {
     return [
-      const Text("Sign in"),
       buildEmailField(),
       PasswordField(
         controller: passwordController,
@@ -72,6 +98,19 @@ class _AuthScreenState extends State<AuthScreen> {
         child: _loading ?
           const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
           : const Text("Sign in"),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Don't have an account yet?"),
+          InkWell(
+            onTap: () => setState(() => currentAction = AuthAction.signUp),
+            child: Text(
+              " Sign up",
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
+        ],
       ),
     ];
   }
@@ -133,7 +172,20 @@ class _AuthScreenState extends State<AuthScreen> {
         onPressed: _loading ? null : () => signUp(context),
         child: _loading ?
           const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-          : const Text("Login"),
+          : const Text("Sign up"),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Already have an account?"),
+          InkWell(
+            onTap: () => setState(() => currentAction = AuthAction.signIn),
+            child: Text(
+              " Sign in",
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
+        ],
       ),
     ];
   }
