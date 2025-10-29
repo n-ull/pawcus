@@ -12,13 +12,28 @@ FormFieldValidator<T> composeValidators<T>(List<FormFieldValidator<T>> validator
 }
 
 
-String? validateIsNotEmpty(String? value) {
-  if (value == null || value.isEmpty) {
-    return "This field can't be empty";
-  }
+FormFieldValidator<String> validateLength(int min, {int? max}) {
+  return (String? value) {
+    if (value == null && min > 0) {
+      return "This field can't be empty";
+    }
 
-  return null;
+    value = value!;
+
+    if (value.length < min) {
+      return 'Value must be at least $min characters long';
+    }
+
+    if (max != null && value.length > max) {
+      return 'Value must be at most $max characters long';
+    }
+
+    return null;
+  };
 }
+
+
+FormFieldValidator<String> validateIsNotEmpty = validateLength(1);
 
 
 String? validateEmailFormat(String? value) {
@@ -29,4 +44,12 @@ String? validateEmailFormat(String? value) {
     return 'Please enter a valid email';
   }
   return null;
+}
+
+
+FormFieldValidator<String> validateMatches(TextEditingController expected) {
+  return (String? value) {
+    if (value == expected.text) return null;
+    return 'Values do not match';
+  };
 }

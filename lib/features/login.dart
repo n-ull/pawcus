@@ -8,6 +8,10 @@ import 'package:pawcus/core/validators.dart';
 import 'package:pawcus/services/auth_service.dart';
 
 
+const minPasswordLength = 8;
+const maxPasswordLength = 128;
+
+
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -39,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Form(
             key: _formKey,
             child: Column(
-              children: buildSignInBody(context),
+              children: buildSignUpBody(context),
             ),
           ),
         ),
@@ -109,5 +113,33 @@ class _AuthScreenState extends State<AuthScreen> {
     );
 
     if (user != null) context.go(Routes.home.path);
+  }
+
+  List<Widget> buildSignUpBody(BuildContext context) {
+    FormFieldValidator<String> passwordValidator = validateLength(minPasswordLength, max: maxPasswordLength);
+    return [
+      const Text('Sign up'),
+      buildEmailField(),
+      PasswordField(
+        controller: passwordController,
+        validator: passwordValidator,
+        placeholder: 'Enter your password',
+      ),
+      PasswordField(
+        validator: composeValidators([passwordValidator, validateMatches(passwordController)]),
+        placeholder: 'Confirm your password',
+      ),
+      ElevatedButton(
+        onPressed: _loading ? null : () => signUp(context),
+        child: _loading ?
+          const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+          : const Text("Login"),
+      ),
+    ];
+  }
+
+  Future<void> signUp(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) return;
+    print("Sign up mock");
   }
 }
