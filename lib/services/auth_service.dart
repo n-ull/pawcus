@@ -37,13 +37,7 @@ class FirebaseAuthService implements AuthService {
         email: email,
         password: password,
       );
-      final user = credential.user;
-      final userEmail = user?.email;
-      if (userEmail == null) {
-        // We shouldn't reach this point. Users should always have an email in our app
-        throw const AuthException('User email is not available');
-      }
-      return AppUser(email: userEmail);
+      return _getUserFromCredential(credential);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
         throw const AuthException('Invalid credentials');
@@ -70,19 +64,19 @@ class FirebaseAuthService implements AuthService {
         email: email,
         password: password,
       );
-      final user = credential.user;
-      final userEmail = user?.email;
-      if (userEmail == null) {
-        // We shouldn't reach this point. Users should always have an email in our app
-        throw const AuthException('User email is not available');
-      }
-      return AppUser(email: userEmail);
+      return _getUserFromCredential(credential);
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email') {
+        throw const AuthException('E-mail is wrongly formatted');
+      }
+      if (e.code == 'too-many-requests') {
+        throw const AuthException('Too many attempts. Try again later');
+      }
       if (e.code == 'weak-password') {
         throw const AuthException('The password provided is too weak');
       }
       if (e.code == 'email-already-in-use') {
-        throw const AuthException('An account already exists for that email.');
+        throw const AuthException('An account already exists for that email');
       }
       throw AuthException(e.message ?? e.code);
     } catch (e) {
@@ -100,5 +94,15 @@ class FirebaseAuthService implements AuthService {
     final user = _auth.currentUser;
     if (user == null || user.email == null) return null;
     return AppUser(email: user.email!);
+  }
+
+  AppUser _getUserFromCredential(UserCredential credential) {
+    final user = credential.user;
+    final userEmail = user?.email;
+    if (userEmail == null) {
+      // We shouldn't reach this point. Users should always have an email in our app
+      throw const AuthException('User email is not available');
+    }
+    return AppUser(email: userEmail);
   }
 }
