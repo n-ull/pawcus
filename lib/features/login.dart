@@ -138,9 +138,9 @@ class _AuthScreenState extends State<AuthScreen> {
     AppUser? user;
     try {
       user = await _authService.signIn(emailController.text, passwordController.text);
-      message = 'Logged in successfully as ${user.email}';
+      message = 'Signed in successfully as ${user.email}';
     } on AuthException catch(e) {
-      message = 'Login failed: ${e.message}';
+      message = 'Sign in failed: ${e.message}';
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -157,7 +157,6 @@ class _AuthScreenState extends State<AuthScreen> {
   List<Widget> buildSignUpBody(BuildContext context) {
     FormFieldValidator<String> passwordValidator = validateLength(minPasswordLength, max: maxPasswordLength);
     return [
-      const Text('Sign up'),
       buildEmailField(),
       PasswordField(
         controller: passwordController,
@@ -192,6 +191,26 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> signUp(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
-    print("Sign up mock");
+
+    setState(() => _loading = true);
+
+    String message = 'An unexpected error occurred';
+    AppUser? user;
+    try {
+      user = await _authService.signUp(emailController.text, passwordController.text);
+      message = 'Account created for ${user.email}';
+    } on AuthException catch(e) {
+      message = 'Sign up failed: ${e.message}';
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+
+    if (user != null) context.go(Routes.home.path);
   }
 }

@@ -65,7 +65,29 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<AppUser> signUp(String email, String password) async {
-    throw UnimplementedError('Sign up is not yet implemented');
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = credential.user;
+      final userEmail = user?.email;
+      if (userEmail == null) {
+        // We shouldn't reach this point. Users should always have an email in our app
+        throw const AuthException('User email is not available');
+      }
+      return AppUser(email: userEmail);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        throw const AuthException('The password provided is too weak');
+      }
+      if (e.code == 'email-already-in-use') {
+        throw const AuthException('An account already exists for that email.');
+      }
+      throw AuthException(e.message ?? e.code);
+    } catch (e) {
+      throw const AuthException('An unexpected error occurred during sign in');
+    }
   }
 
   @override
