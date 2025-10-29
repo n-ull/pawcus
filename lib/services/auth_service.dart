@@ -46,7 +46,7 @@ class FirebaseAuthService implements AuthService {
         throw const AuthException('E-mail is wrongly formatted');
       }
       if (e.code == 'too-many-requests') {
-        throw const AuthException('Too many attempts. Try again later');
+        throw const AuthException('Too many attempts, try again later');
       }
       if (e.code == 'user-disabled') {
         throw const AuthException('Account is disabled');
@@ -70,7 +70,7 @@ class FirebaseAuthService implements AuthService {
         throw const AuthException('E-mail is wrongly formatted');
       }
       if (e.code == 'too-many-requests') {
-        throw const AuthException('Too many attempts. Try again later');
+        throw const AuthException('Too many attempts, try again later');
       }
       if (e.code == 'weak-password') {
         throw const AuthException('The password provided is too weak');
