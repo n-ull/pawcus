@@ -1,5 +1,6 @@
 import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/models/pet_stats.dart';
+import 'package:pawcus/core/models/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheService {
@@ -48,9 +49,31 @@ class CacheService {
   }
 
   Future<void> savePet(Pet pet) async {
-    await savePetStats(pet.petStat);
-    await prefs.setString('name', pet.name);
-    await prefs.setString('id', pet.id);
-    await prefs.setString('lastUpdate', pet.lastUpdate.toIso8601String());
+    await Future.wait([
+      savePetStats(pet.petStat),
+      prefs.setString('name', pet.name),
+      prefs.setString('id', pet.id),
+      prefs.setString('lastUpdate', pet.lastUpdate.toIso8601String()),
+    ]);
+  }
+
+  Future<void> saveSettings(Settings settings) async {
+    await Future.wait([
+      prefs.setBool('deepFocus', settings.deepFocusEnabled),
+      prefs.setBool('hasUsageAccess', settings.notificationsEnabled),
+      prefs.setDouble('appUsageThreshold', settings.appUsageThreshold),
+    ]);
+  }
+
+  Settings getSettings() {
+    final deepFocus = prefs.getBool('deepFocus') ?? false;
+    final notifications = prefs.getBool('notificationsEnabled') ?? false;
+    final appUsageThreshold = prefs.getDouble('appUsageThreshold') ?? 10;
+
+    return Settings(
+      deepFocusEnabled: deepFocus,
+      notificationsEnabled: notifications,
+      appUsageThreshold: appUsageThreshold,
+    );
   }
 }
