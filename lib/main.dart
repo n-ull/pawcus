@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 
+import 'package:pawcus/core/logger.dart';
 import 'package:pawcus/core/router/router.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 import 'firebase_options.dart';
@@ -12,6 +13,8 @@ import 'firebase_options.dart';
 void main() async {
   // revisar si flutter inicializó correctamente
   WidgetsFlutterBinding.ensureInitialized();
+
+  setupLogging();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
