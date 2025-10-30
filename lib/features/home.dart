@@ -34,11 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Color(0xFF74c9ff),
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.white,
         buttonBackgroundColor: Colors.white,
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Color(0xFF74c9ff),
         onTap: (index) {
           if (index == 3) {
             context.go("/login");
@@ -57,12 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         animationCurve: Curves.bounceInOut,
         animationDuration: const Duration(milliseconds: 200),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: _buildBody(),
-        ),
-      ),
+      body: _buildBody(),
     );
   }
 

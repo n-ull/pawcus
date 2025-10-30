@@ -16,6 +16,8 @@ class _PermissionsScreenState extends State<PermissionsScreen>
   bool hasUsageAccess = false;
   bool hasOverlayPermission = false;
 
+  /// minutes
+
   @override
   void initState() {
     super.initState();
@@ -49,35 +51,33 @@ class _PermissionsScreenState extends State<PermissionsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListTile(
-              title: Text("Has Usage Access"),
-              trailing: Switch(
-                value: hasUsageAccess,
-                onChanged: (_)  async {
-                  await permissionsService.requestAppUsagePermissions();
-                  await checkPermissions();
-                },
-              ),
-            ),
-            ListTile(
-              title: Text("Has Overlay Permission"),
-              trailing: Switch(
-                value: hasOverlayPermission,
-                onChanged: (_) async {
-                  await permissionsService.requestOverlayPermissions();
-                  await checkPermissions();
-                },
-              ),
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ListTile(
+          title: Text("Has Usage Access"),
+          subtitle: Text("This is useful for tracking app usage."),
+          trailing: Switch(
+            value: hasUsageAccess,
+            onChanged: (_) async {
+              await permissionsService.requestAppUsagePermissions();
+              await checkPermissions();
+            },
+          ),
         ),
-      ),
+        ListTile(
+          title: Text("Has Overlay Permission"),
+          subtitle: Text("This is useful for ..."),
+          trailing: Switch(
+            value: hasOverlayPermission,
+            onChanged: (_) async {
+              await permissionsService.requestOverlayPermissions();
+              await checkPermissions();
+            },
+          ),
+        ),
+      ],
     );
   }
 }

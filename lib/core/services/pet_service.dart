@@ -43,19 +43,7 @@ class PetService {
   }
 
   Future<Pet> _loadPet() async {
-    return Pet(
-      id: 'p-1',
-      name: 'Erbcito',
-      lastUpdate: DateTime.now(),
-      petStat: PetStats(
-        happiness: 0.5,
-        energy: 0.5,
-        hunger: 0.3,
-        thirst: 0.3,
-        sleep: 0.3,
-        hygiene: 0.3,
-      ),
-    );
+    return await _cacheService.getPet();
   }
 
   Future<void> _savePet() async {

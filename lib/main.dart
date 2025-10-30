@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       routerConfig: router,
+      scaffoldMessengerKey: GlobalKey(debugLabel: "scaffoldMessenger"),
     );
   }
 }

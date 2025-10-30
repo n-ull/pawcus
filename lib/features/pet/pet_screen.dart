@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pawcus/core/components/stats_row.dart';
 import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/models/pet_stats.dart';
-import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 
@@ -13,49 +13,57 @@ class PetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        ValueListenableBuilder<Pet>(
-          valueListenable: pet,
-          builder: (context, currentPet, child) {
-            return StatsRow(pet: currentPet);
-          },
-        ),
-        SizedBox(height: 16),
-        Expanded(child: Center(child: Image.asset('assets/pet.png'))),
-        SizedBox(height: 16),
-        Row(
+        Lottie.asset('assets/lottie/Clouds.json'),
+        Column(
           children: [
-            // reset all stats (it saves the local data)
-            IconButton(
-              onPressed: () {
-                sl<PetService>().updatePetStats(
-                  PetStats(
-                    happiness: 0,
-                    energy: 0,
-                    hunger: 0,
-                    thirst: 0,
-                    sleep: 0,
-                    hygiene: 0,
-                  ),
-                );
-              },
-              icon: Icon(Icons.restore_from_trash),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: ValueListenableBuilder<Pet>(
+                valueListenable: pet,
+                builder: (context, currentPet, child) {
+                  return StatsRow(pet: currentPet);
+                },
+              ),
             ),
-            // print the cache data
-            IconButton(
+            SizedBox(height: 16),
+            Expanded(child: Center(child: Image.asset('assets/pet.png'))),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                // reset all stats (it saves the local data)
+                IconButton(
+                  onPressed: () {
+                    sl<PetService>().updatePetStats(
+                      PetStats(
+                        happiness: 0,
+                        energy: 0,
+                        hunger: 0,
+                        thirst: 0,
+                        sleep: 0,
+                        hygiene: 0,
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.restore_from_trash),
+                ),
+                // print the cache data
+                IconButton(
+                  onPressed: () {
+
+                  },
+                  icon: Icon(Icons.restore_rounded),
+                ),
+              ],
+            ),
+            ElevatedButton(
               onPressed: () {
-                sl<CacheService>().getPet();
+                sl<PetService>().checkDailyAppUsage();
               },
-              icon: Icon(Icons.restore_rounded),
+              child: Text('Check Use Access'),
             ),
           ],
-        ),
-        ElevatedButton(
-          onPressed: () {
-            sl<PetService>().checkDailyAppUsage();
-          },
-          child: Text('Check Use Access'),
         ),
       ],
     );
