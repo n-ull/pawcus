@@ -9,12 +9,16 @@ import 'package:pawcus/services/auth_service.dart';
 
 
 class AppRouter {
+  final AuthService authService;
+
+  AppRouter({required this.authService});
+
   GoRouter router() {
     return GoRouter(
       initialLocation: Routes.home.path,
       debugLogDiagnostics: true,
       redirect: (context, state) {
-        final isAuthenticated = FirebaseAuthService().isAuthenticated();
+        final isAuthenticated = authService.isAuthenticated();
         final isLoginRoute = state.subloc == Routes.login.path;
         if (!isAuthenticated && !isLoginRoute) {
           return Routes.login.path;
