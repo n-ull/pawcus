@@ -35,8 +35,8 @@ class AppRouter {
           path: Routes.home.path,
           name: Routes.home.name,
           builder: (context, state) {
-            final fromLogin = state.queryParams["refresh"] == "true";
-            return HomeScreen(key: ValueKey(fromLogin ? DateTime.now() : 'home'));
+            final refresh = state.queryParams["refresh"] == "true";
+            return HomeScreen(key: ValueKey(refresh ? DateTime.now() : 'home'));
           },
         ),
         GoRoute(
