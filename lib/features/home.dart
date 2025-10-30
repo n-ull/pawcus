@@ -1,12 +1,16 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:go_router_plus/go_router_plus.dart';
+
 import 'package:pawcus/core/models/app_usage_entry.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/focus/focus_screen.dart';
 import 'package:pawcus/features/pet/pet_screen.dart';
 import 'package:pawcus/features/settings/settings_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
         buttonBackgroundColor: Colors.white,
         backgroundColor: Color(0xFF74c9ff),
         onTap: (index) {
+          if (index == 3) {
+            context.go("/login");
+            return;
+          }
           setState(() {
             _currentIndex = index;
           });
@@ -44,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(CupertinoIcons.paw_solid),
           Icon(CupertinoIcons.cloud),
           Icon(CupertinoIcons.gear_solid),
+          Icon(CupertinoIcons.arrow_right_circle_fill),
         ],
         animationCurve: Curves.bounceInOut,
         animationDuration: const Duration(milliseconds: 200),
@@ -60,7 +69,3 @@ class _HomeScreenState extends State<HomeScreen> {
     ][_currentIndex];
   }
 }
-
-
-
-
