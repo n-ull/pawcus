@@ -35,7 +35,7 @@ Future<void> main() async {
   if (useRollbar) {
     runWithRollbar(app);
   } else {
-    runApp(MyApp());
+    runApp(app);
   }
 }
 

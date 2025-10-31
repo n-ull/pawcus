@@ -19,7 +19,7 @@ const logHandlers = {
 Future<void> setupLogging() async {
   // TODO: Make this configurable through the env or something!
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen(logHandlers['print']);
+  Logger.root.onRecord.listen(logHandlers['printer']);
 }
 
 
