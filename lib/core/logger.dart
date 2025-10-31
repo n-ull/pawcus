@@ -21,7 +21,7 @@ const logHandlers = {
 
 Future<void> setupLogging(AppConfiguration configuration) async {
   Logger.root.level = configuration.logLevel;
-  Logger.root.onRecord.listen(logHandlers[configuration.logHandler]);
+  Logger.root.onRecord.listen(logHandlers[configuration.logHandler] ?? _printLog);
 }
 
 

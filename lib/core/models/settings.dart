@@ -1,6 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logging/logging.dart' as logging;
-import 'package:rollbar_flutter_aio/common/rollbar_common.dart';
 
 
 enum Environment {
@@ -19,7 +18,7 @@ enum Environment {
 
   @override
   String toString() {
-    return super.toString().split(".")[1].capitalize();
+    return '${name[0].toUpperCase()}${name.substring(1)}';
   }
 }
 
@@ -45,7 +44,7 @@ class AppConfiguration {
 
   final String logHandler;
   final Environment environment;
-  final String rollbarAccessToken;
+  final String? rollbarAccessToken;
   final String rollbarCodeVersion;
   final logging.Level logLevel;
 
@@ -54,7 +53,7 @@ class AppConfiguration {
   const AppConfiguration({
     this.logHandler = _defaultLogHandler,
     this.environment = _defaultEnvironment,
-    required this.rollbarAccessToken,
+    this.rollbarAccessToken,
     this.rollbarCodeVersion = _defaultRollbarCodeVersion,
     this.logLevel = _defaultLogLevel,
   });
@@ -62,10 +61,17 @@ class AppConfiguration {
   factory AppConfiguration.fromEnv() {
     final environment = dotenv.env['ENVIRONMENT'];
     final logLevel = dotenv.env['LOG_LEVEL'];
+    final handler = dotenv.env['LOG_HANDLER'] ?? _defaultLogHandler;
+    final token = dotenv.env['ROLLBAR_ACCESS_TOKEN'];
+
+    if (handler == 'rollbar' && (token == null || token.isEmpty)) {
+      throw ArgumentError('ROLLBAR_ACCESS_TOKEN is required when LOG_HANDLER=rollbar');
+    }
+
     return AppConfiguration(
-      logHandler: dotenv.env['LOG_HANDLER'] ?? _defaultLogHandler,
+      logHandler: handler,
       environment: environment != null ? Environment.fromString(environment) : _defaultEnvironment,
-      rollbarAccessToken: dotenv.env['ROLLBAR_ACCESS_TOKEN']!,
+      rollbarAccessToken: handler == 'rollbar' ? token : null,
       rollbarCodeVersion: dotenv.env['ROLLBAR_CODE_VERSION'] ?? _defaultRollbarCodeVersion,
       logLevel: logLevel != null ? _mapLogLevel(logLevel) : _defaultLogLevel,
     );

@@ -36,7 +36,7 @@ Future<void> main() async {
   final app = MyApp();
 
   if (configuration.useRollbar) {
-    runWithRollbar(configuration, app);
+    await runWithRollbar(configuration, app);
   } else {
     runApp(app);
   }
@@ -45,9 +45,9 @@ Future<void> main() async {
 
 Future<void> runWithRollbar(AppConfiguration configuration, MyApp app) async {
   final config = rollbar.Config(
-    accessToken: configuration.rollbarAccessToken,
+    accessToken: configuration.rollbarAccessToken!,
     environment: configuration.environment.toString(),
-    codeVersion:  configuration.rollbarAccessToken,
+    codeVersion:  configuration.rollbarCodeVersion,
     handleUncaughtErrors: true,
     includePlatformLogs: true,
     framework: 'flutter',
