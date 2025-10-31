@@ -110,4 +110,5 @@ class FirebaseAuthService implements AuthService {
   @override
   bool isAuthenticated() {
     return currentUser != null;
+  }
 }
