@@ -42,7 +42,7 @@ class AppRouter {
         GoRoute(
           path: Routes.login.path,
           name: Routes.login.name,
-          builder: (context, state) => const LoginScreen(),
+          builder: (context, state) => const AuthScreen(),
         ),
         GoRoute(
           path: Routes.permissions.path,
