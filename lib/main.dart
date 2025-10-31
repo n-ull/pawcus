@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router_plus/go_router_plus.dart';
+import 'package:rollbar_flutter_aio/rollbar.dart' as rollbar;
 
 import 'package:pawcus/core/logger.dart';
 import 'package:pawcus/core/router/router.dart';
@@ -10,11 +11,11 @@ import 'package:pawcus/core/services/service_locator.dart';
 import 'firebase_options.dart';
 
 
-void main() async {
+Future<void> main() async {
   // revisar si flutter inicializó correctamente
   WidgetsFlutterBinding.ensureInitialized();
 
-  setupLogging();
+  await setupLogging();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -26,8 +27,32 @@ void main() async {
   // ejecutar service locator
   await setupServiceLocator();
 
-  runApp(MyApp());
+  // TODO: Make this configurable through the env
+  final useRollbar = false;
+
+  final app = MyApp();
+
+  if (useRollbar) {
+    runWithRollbar(app);
+  } else {
+    runApp(MyApp());
+  }
 }
+
+
+Future<void> runWithRollbar(MyApp app) async {
+  // TODO: Make this configurable through the env
+  const config = rollbar.Config(
+    accessToken: 'ACCESS_TOKEN',
+    environment: 'ENVIRONMENT',
+    codeVersion: 'CODE_VERSION',
+    handleUncaughtErrors: true,
+    includePlatformLogs: true,
+  );
+
+  await rollbar.RollbarFlutter.run(config, () => runApp(app));
+}
+
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
