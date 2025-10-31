@@ -12,7 +12,7 @@ enum Environment {
       'production' => Environment.production,
       'development' => Environment.development,
       'test' => Environment.test,
-      _ => throw "Unsupported environment $value",
+      _ => throw ArgumentError('Unsupported environment: $value'),
     };
   }
 
