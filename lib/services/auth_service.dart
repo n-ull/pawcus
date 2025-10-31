@@ -23,6 +23,7 @@ abstract class AuthService {
   Future<AppUser> signUp(String email, String password);
   Future<void> signOut();
   AppUser? get currentUser;
+  bool isAuthenticated();
 }
 
 
@@ -105,4 +106,8 @@ class FirebaseAuthService implements AuthService {
     }
     return AppUser(email: userEmail);
   }
+
+  @override
+  bool isAuthenticated() {
+    return currentUser != null;
 }
