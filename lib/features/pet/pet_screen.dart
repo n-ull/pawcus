@@ -7,7 +7,10 @@ import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 
 class PetScreen extends StatelessWidget {
-  const PetScreen({super.key, required this.pet, required this.experiencePercentage});
+  const PetScreen({super.key, required this.pet, required this.experiencePercentage}) : assert(
+    experiencePercentage >= 0 && experiencePercentage <= 100,
+    'experiencePercentage must be between 0 and 100'
+  );
 
   final ValueNotifier<Pet> pet;
   final double experiencePercentage;
