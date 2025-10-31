@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:rollbar_flutter_aio/rollbar.dart' show Rollbar;
 import 'package:rollbar_flutter_aio/common/rollbar_common.dart' as rollbar_common;
@@ -19,8 +20,7 @@ const logHandlers = {
 
 
 Future<void> setupLogging(AppConfiguration configuration) async {
-  // TODO: Make this configurable through the env or something!
-  Logger.root.level = Level.ALL;
+  Logger.root.level = configuration.logLevel;
   Logger.root.onRecord.listen(logHandlers[configuration.logHandler]);
 }
 
@@ -31,15 +31,34 @@ String _formatLog(LogRecord record) {
 
 
 void _printLog(LogRecord record) {
-  // ignore: avoid_print
-  print(_formatLog(record));
+  debugPrint(_formatLog(record));
 }
 
 
 void _rollbarLog(LogRecord record) {
+  final messageOrError = record.error ?? _formatLog(record);
+
+  if (!_isRollbarAvailable()) {
+    // Log messages when Rollbar is not yet initialized
+    debugPrint('Early log: $messageOrError');
+    if (record.error != null) debugPrint('Error: $record.error');
+    if (record.stackTrace != null) debugPrintStack(stackTrace: record.stackTrace);
+    return;
+  }
+
   final level = rollbarLevel(record.level);
   if (level == null) return;
-  Rollbar.log(_formatLog(record), level: level);
+  Rollbar.log(messageOrError, level: level, stackTrace: record.stackTrace ?? StackTrace.empty);
+}
+
+
+bool _isRollbarAvailable() {
+  try {
+    Rollbar.current;
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 

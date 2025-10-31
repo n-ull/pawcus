@@ -4,7 +4,6 @@ import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/features/home.dart';
 import 'package:pawcus/features/login.dart';
 import 'package:pawcus/features/permissions/permissions_screen.dart';
-import 'package:pawcus/core/logger.dart';
 
 
 class AppRouter {
@@ -16,10 +15,7 @@ class AppRouter {
         GoRoute(
           path: Routes.home.path,
           name: Routes.home.name,
-          builder: (context, state) {
-            logger.shout("SOME LOG");
-            return const HomeScreen();
-          },
+          builder: (context, state) => const HomeScreen(),
         ),
         GoRoute(
           path: Routes.login.path,
