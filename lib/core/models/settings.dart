@@ -48,7 +48,7 @@ class AppConfiguration {
   final String rollbarCodeVersion;
   final logging.Level logLevel;
 
-  bool get useRollbar => logHandler == 'rollbar';
+  bool get useRollbar => logHandler == 'rollbar' && (rollbarAccessToken?.isNotEmpty ?? false);
 
   const AppConfiguration({
     this.logHandler = _defaultLogHandler,

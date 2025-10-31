@@ -41,7 +41,7 @@ void _rollbarLog(LogRecord record) {
   if (!_isRollbarAvailable()) {
     // Log messages when Rollbar is not yet initialized
     debugPrint('Early log: $messageOrError');
-    if (record.error != null) debugPrint('Error: $record.error');
+    if (record.error != null) debugPrint('Error: ${record.error}');
     if (record.stackTrace != null) debugPrintStack(stackTrace: record.stackTrace);
     return;
   }
