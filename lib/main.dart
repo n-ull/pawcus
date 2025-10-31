@@ -10,6 +10,7 @@ import 'package:rollbar_flutter_aio/rollbar.dart' as rollbar;
 import 'package:pawcus/core/logger.dart';
 import 'package:pawcus/core/router/router.dart';
 import 'package:pawcus/core/services/service_locator.dart';
+import 'package:pawcus/services/auth_service.dart';
 import 'firebase_options.dart';
 
 
@@ -59,7 +60,7 @@ Future<void> runWithRollbar(AppConfiguration configuration, MyApp app) async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final GoRouter router = AppRouter().router();
+  final GoRouter router = AppRouter(authService: FirebaseAuthService()).router();
 
   @override
   Widget build(BuildContext context) {
