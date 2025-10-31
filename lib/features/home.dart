@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody() {
     return <Widget>[
-      PetScreen(pet: pet),
+      PetScreen(pet: pet, experiencePercentage: 50),
       FocusScreen(),
       SettingsScreen(),
     ][_currentIndex];
