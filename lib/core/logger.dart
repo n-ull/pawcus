@@ -2,6 +2,8 @@ import 'package:logging/logging.dart';
 import 'package:rollbar_flutter_aio/rollbar.dart' show Rollbar;
 import 'package:rollbar_flutter_aio/common/rollbar_common.dart' as rollbar_common;
 
+import 'package:pawcus/core/models/settings.dart';
+
 
 typedef RollbarLevel = rollbar_common.Level;
 
@@ -16,10 +18,10 @@ const logHandlers = {
 };
 
 
-Future<void> setupLogging() async {
+Future<void> setupLogging(AppConfiguration configuration) async {
   // TODO: Make this configurable through the env or something!
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen(logHandlers['printer']);
+  Logger.root.onRecord.listen(logHandlers[configuration.logHandler]);
 }
 
 

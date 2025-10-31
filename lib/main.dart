@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router_plus/go_router_plus.dart';
+import 'package:pawcus/core/models/settings.dart';
 import 'package:rollbar_flutter_aio/rollbar.dart' as rollbar;
 
 import 'package:pawcus/core/logger.dart';
@@ -15,7 +17,10 @@ Future<void> main() async {
   // revisar si flutter inicializó correctamente
   WidgetsFlutterBinding.ensureInitialized();
 
-  await setupLogging();
+  await dotenv.load();
+  final configuration = AppConfiguration.fromEnv();
+
+  await setupLogging(configuration);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -27,27 +32,24 @@ Future<void> main() async {
   // ejecutar service locator
   await setupServiceLocator();
 
-  // TODO: Make this configurable through the env
-  final useRollbar = false;
-
   final app = MyApp();
 
-  if (useRollbar) {
-    runWithRollbar(app);
+  if (configuration.useRollbar) {
+    runWithRollbar(configuration, app);
   } else {
     runApp(app);
   }
 }
 
 
-Future<void> runWithRollbar(MyApp app) async {
-  // TODO: Make this configurable through the env
-  const config = rollbar.Config(
-    accessToken: 'ACCESS_TOKEN',
-    environment: 'ENVIRONMENT',
-    codeVersion: 'CODE_VERSION',
+Future<void> runWithRollbar(AppConfiguration configuration, MyApp app) async {
+  final config = rollbar.Config(
+    accessToken: configuration.rollbarAccessToken,
+    environment: configuration.environment.toString(),
+    codeVersion:  configuration.rollbarAccessToken,
     handleUncaughtErrors: true,
     includePlatformLogs: true,
+    framework: 'flutter',
   );
 
   await rollbar.RollbarFlutter.run(config, () => runApp(app));
