@@ -7,9 +7,13 @@ import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 
 class PetScreen extends StatelessWidget {
-  const PetScreen({super.key, required this.pet});
+  const PetScreen({super.key, required this.pet, required this.experiencePercentage}) : assert(
+    experiencePercentage >= 0 && experiencePercentage <= 100,
+    'experiencePercentage must be between 0 and 100'
+  );
 
   final ValueNotifier<Pet> pet;
+  final double experiencePercentage;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +31,29 @@ class PetScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 16),
-            Expanded(child: Center(child: Image.asset('assets/pet.png'))),
+            SizedBox(height: 128),
+            Expanded(child: Column(children: [
+              Center(child: Image.asset('assets/pet.png')),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: 50,
+                  maxWidth: 300,
+                ),
+                child: Row(children: [
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: experiencePercentage / 100,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      semanticsLabel: 'Exp.',
+                      semanticsValue: experiencePercentage.toString(),
+                      minHeight: 16,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text("Exp."),
+                ]),
+              ),
+            ])),
             SizedBox(height: 16),
             Row(
               children: [
