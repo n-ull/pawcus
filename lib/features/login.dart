@@ -46,13 +46,10 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     String title;
-    List<Widget> Function(BuildContext) bodyBuilder;
     if (currentAction == AuthAction.signIn) {
       title = 'Sign in';
-      bodyBuilder = buildSignInBody;
     } else {
       title = 'Sign up';
-      bodyBuilder = buildSignUpBody;
     }
 
     final theme = Theme.of(context);
