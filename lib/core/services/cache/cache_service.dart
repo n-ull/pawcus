@@ -34,7 +34,7 @@ class CacheService {
         ? DateTime.tryParse(prefs.getString('lastUpdate')!) ?? DateTime.now()
         : DateTime.now();
 
-    return Pet(id: id, name: name, lastUpdate: lastUpdate, petStat: petStats);
+    return Pet(id: id, name: name, lastUpdate: lastUpdate, petStats: petStats);
   }
 
   Future<void> savePetStats(PetStats petStats) async {
@@ -50,7 +50,7 @@ class CacheService {
 
   Future<void> savePet(Pet pet) async {
     await Future.wait([
-      savePetStats(pet.petStat),
+      savePetStats(pet.petStats),
       prefs.setString('name', pet.name),
       prefs.setString('id', pet.id),
       prefs.setString('lastUpdate', pet.lastUpdate.toIso8601String()),

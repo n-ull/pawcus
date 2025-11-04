@@ -4,21 +4,21 @@ class Pet {
   final String id;
   final String name;
   final DateTime lastUpdate;
-  final PetStats petStat;
+  final PetStats petStats;
 
   Pet({
     required this.id,
     required this.name,
     required this.lastUpdate,
-    required this.petStat,
+    required this.petStats,
   });
 
-  Pet copyWith({DateTime? lastUpdate, PetStats? petStat}) {
+  Pet copyWith({DateTime? lastUpdate, PetStats? petStats}) {
     return Pet(
       id: id,
       name: name,
       lastUpdate: lastUpdate ?? this.lastUpdate,
-      petStat: petStat ?? this.petStat,
+      petStats: petStats ?? this.petStats
     );
   }
 
@@ -27,7 +27,7 @@ class Pet {
       'id': id,
       'name': name,
       'lastUpdate': lastUpdate.millisecondsSinceEpoch,
-      'petStat': petStat.toMap(),
+      'petStats': petStats.toMap(),
     };
   }
 
@@ -36,7 +36,7 @@ class Pet {
       id: map['id'],
       name: map['name'],
       lastUpdate: DateTime.fromMillisecondsSinceEpoch(map['lastUpdate']),
-      petStat: PetStats.fromMap(map['petStat']),
+      petStats: PetStats.fromMap(map['petStats']),
     );
   }
 }
