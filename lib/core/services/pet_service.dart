@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:pawcus/core/models/pet.dart';
-import 'package:pawcus/core/models/pet_stats.dart';
 import 'package:pawcus/core/services/app_usage_service.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
+import 'package:pawcus/features/pet/models.dart';
 
 class PetService {
   late final ValueNotifier<Pet> pet;

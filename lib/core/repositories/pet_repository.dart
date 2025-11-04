@@ -1,4 +1,4 @@
-import 'package:pawcus/core/models/pet.dart';
+import 'package:pawcus/features/pet/models.dart';
 
 abstract class PetRepository {
   Future<Pet?> getPet(String id);

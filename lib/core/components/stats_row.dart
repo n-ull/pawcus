@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pawcus/core/components/stat_bubble.dart';
-import 'package:pawcus/core/models/pet.dart';
+import 'package:pawcus/features/pet/models.dart';
 
 class StatsRow extends StatelessWidget {
   const StatsRow({super.key, required this.pet});

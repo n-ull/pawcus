@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pawcus/core/models/pet.dart';
-import 'package:pawcus/core/models/pet_stats.dart';
+
 import 'package:pawcus/core/services/cache/cache_service.dart';
+import 'package:pawcus/features/pet/models.dart';
+
 import '../mocks/fake_cache_service.dart';
 
 void main() {

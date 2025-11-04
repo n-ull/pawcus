@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pawcus/core/components/stats_row.dart';
-import 'package:pawcus/core/models/pet.dart';
-import 'package:pawcus/core/models/pet_stats.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
+import 'package:pawcus/features/pet/models.dart';
+
 
 class PetScreen extends StatelessWidget {
   const PetScreen({super.key, required this.pet, required this.experiencePercentage}) : assert(

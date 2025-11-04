@@ -1,6 +1,6 @@
-import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/repositories/pet_repository.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
+import 'package:pawcus/features/pet/models.dart';
 
 class PetRepositoryImpl implements PetRepository {
   final CacheService _cacheService;
