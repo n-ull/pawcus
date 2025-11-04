@@ -51,8 +51,6 @@ class PetService {
   }
 
   Future<void> checkDailyAppUsage() async {
-    if (!await _permissionsService.hasUsageAccess()) return;
-
     final usage = await _appUsageService.getAppsUsage(
       DateTime.now().subtract(const Duration(days: 1)),
       DateTime.now(),
