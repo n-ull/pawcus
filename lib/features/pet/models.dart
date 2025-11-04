@@ -42,8 +42,8 @@ class Pet {
       id: map['id'],
       name: map['name'],
       lastUpdate: DateTime.fromMillisecondsSinceEpoch(map['lastUpdate']),
-      level: map['level'],
-      experience: map['experience'],
+      level: map['level'] ?? 1,
+      experience: map['experience'] ?? 0.0,
       petStats: PetStats.fromMap(map['petStats']),
     );
   }
