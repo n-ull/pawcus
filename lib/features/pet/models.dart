@@ -42,9 +42,11 @@ class Pet {
       id: map['id'],
       name: map['name'],
       lastUpdate: DateTime.fromMillisecondsSinceEpoch(map['lastUpdate']),
-      level: map['level'] ?? 1,
-      experience: map['experience'] ?? 0.0,
-      petStats: PetStats.fromMap(map['petStats']),
+      level: (map['level'] as int?) ?? 1,
+      experience: ((map['experience'] as num?) ?? 0).toDouble(),
+      petStats: map['petStats'] != null
+        ? PetStats.fromMap(map['petStats'] as Map<String, dynamic>)
+        : const PetStats(happiness: 0.5, energy: 0.5, hunger: 0.5, thirst: 0.5, sleep: 0.5, hygiene: 0.5),
     );
   }
 }

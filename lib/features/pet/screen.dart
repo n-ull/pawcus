@@ -114,6 +114,7 @@ class _PetScreenState extends State<PetScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     final newPet = await widget.petRepository.addExp(_pet, -10);
+                    if (!mounted) return;
                     setState(() => _pet = newPet);
                   },
                   child: Text('-10 exp'),
@@ -122,6 +123,7 @@ class _PetScreenState extends State<PetScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     final newPet = await widget.petRepository.addExp(_pet, 10);
+                    if (!mounted) return;
                     setState(() => _pet = newPet);
                   },
                   child: Text('+10 exp'),

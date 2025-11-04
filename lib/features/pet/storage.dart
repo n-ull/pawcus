@@ -25,12 +25,14 @@ class SharedPrefsPetStorage implements PetStorage {
   @override
   Future<void> save(Pet pet) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyFor('id'), pet.id);
-    await prefs.setString(_keyFor('name'), pet.name);
-    await prefs.setInt(_keyFor('level'), pet.level);
-    await prefs.setDouble(_keyFor('experience'), pet.experience);
-    await prefs.setInt(_keyFor('lastUpdate'), pet.lastUpdate.millisecondsSinceEpoch);
-    await savePetStats(pet.petStats);
+    await Future.wait([
+      prefs.setString(_keyFor('id'), pet.id),
+      prefs.setString(_keyFor('name'), pet.name),
+      prefs.setInt(_keyFor('level'), pet.level),
+      prefs.setDouble(_keyFor('experience'), pet.experience),
+      prefs.setInt(_keyFor('lastUpdate'), pet.lastUpdate.millisecondsSinceEpoch),
+      savePetStats(pet.petStats),
+    ]);
   }
 
   @override
@@ -38,12 +40,14 @@ class SharedPrefsPetStorage implements PetStorage {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final subKeys = ['STATS'];
 
-    await prefs.setDouble(_keyFor('happiness', subKeys: subKeys), stats.happiness);
-    await prefs.setDouble(_keyFor('energy', subKeys: subKeys), stats.energy);
-    await prefs.setDouble(_keyFor('hunger', subKeys: subKeys), stats.hunger);
-    await prefs.setDouble(_keyFor('thirst', subKeys: subKeys), stats.thirst);
-    await prefs.setDouble(_keyFor('sleep', subKeys: subKeys), stats.sleep);
-    await prefs.setDouble(_keyFor('hygiene', subKeys: subKeys), stats.hygiene);
+    await Future.wait([
+      prefs.setDouble(_keyFor('happiness', subKeys: subKeys), stats.happiness),
+      prefs.setDouble(_keyFor('energy', subKeys: subKeys), stats.energy),
+      prefs.setDouble(_keyFor('hunger', subKeys: subKeys), stats.hunger),
+      prefs.setDouble(_keyFor('thirst', subKeys: subKeys), stats.thirst),
+      prefs.setDouble(_keyFor('sleep', subKeys: subKeys), stats.sleep),
+      prefs.setDouble(_keyFor('hygiene', subKeys: subKeys), stats.hygiene),
+    ]);
   }
 
   @override
