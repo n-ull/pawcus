@@ -1,8 +1,8 @@
 class Pet {
   final String id;
   final String name;
-  final DateTime lastUpdate;
   final PetStats petStats;
+  DateTime lastUpdate;
   int level;
   double experience;
 

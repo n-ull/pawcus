@@ -4,19 +4,42 @@ import 'package:pawcus/core/components/stats_row.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/pet/models.dart';
+import 'package:pawcus/features/pet/repository.dart';
 
 
-class PetScreen extends StatelessWidget {
-  const PetScreen({super.key, required this.pet, required this.experiencePercentage}) : assert(
-    experiencePercentage >= 0 && experiencePercentage <= 100,
-    'experiencePercentage must be between 0 and 100'
-  );
+class PetScreen extends StatefulWidget {
+  const PetScreen({super.key, required this.petRepository});
 
-  final ValueNotifier<Pet> pet;
-  final double experiencePercentage;
+  final PetRepository petRepository;
+
+  @override
+  State<PetScreen> createState() => _PetScreenState();
+}
+
+class _PetScreenState extends State<PetScreen> {
+  late Pet _pet;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPet();
+  }
+
+  Future<void> _loadPet() async {
+    final pet = await widget.petRepository.getPet() ?? widget.petRepository.getDefaultPet();
+    setState(() {
+      _pet = pet;
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Stack(
       children: [
         Lottie.asset('assets/lottie/Clouds.json'),
@@ -24,12 +47,7 @@ class PetScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ValueListenableBuilder<Pet>(
-                valueListenable: pet,
-                builder: (context, currentPet, child) {
-                  return StatsRow(pet: currentPet);
-                },
-              ),
+              child: StatsRow(pet: _pet),
             ),
             SizedBox(height: 128),
             Expanded(child: Column(children: [
@@ -40,17 +58,17 @@ class PetScreen extends StatelessWidget {
                   maxWidth: 300,
                 ),
                 child: Row(children: [
+                  Text('Lvl. ${_pet.level}'),
+                  const SizedBox(width: 4),
                   Expanded(
                     child: LinearProgressIndicator(
-                      value: experiencePercentage / 100,
+                      value: widget.petRepository.getExpPercentage(_pet) / 100,
                       color: Theme.of(context).colorScheme.inversePrimary,
                       semanticsLabel: 'Exp.',
-                      semanticsValue: experiencePercentage.toString(),
+                      semanticsValue: widget.petRepository.getExpPercentage(_pet).toString(),
                       minHeight: 16,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  Text("Exp."),
                 ]),
               ),
             ])),
@@ -87,6 +105,29 @@ class PetScreen extends StatelessWidget {
                 sl<PetService>().checkDailyAppUsage();
               },
               child: Text('Check Use Access'),
+            ),
+            // TODO: Remove when not debugging
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.petRepository.addExp(_pet, -10);
+                    });
+                  },
+                  child: Text('-10 exp'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.petRepository.addExp(_pet, 10);
+                    });
+                  },
+                  child: Text('+10 exp'),
+                ),
+              ],
             ),
           ],
         ),
