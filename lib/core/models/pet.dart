@@ -5,12 +5,16 @@ class Pet {
   final String name;
   final DateTime lastUpdate;
   final PetStats petStats;
+  int level;
+  double experience;
 
   Pet({
     required this.id,
     required this.name,
     required this.lastUpdate,
     required this.petStats,
+    this.level = 1,
+    this.experience = 0,
   });
 
   Pet copyWith({DateTime? lastUpdate, PetStats? petStats}) {
