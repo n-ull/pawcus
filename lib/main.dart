@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -5,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/models/settings.dart';
+import 'package:pawcus/features/focus/deep_focus_overlay.dart';
 import 'package:rollbar_flutter_aio/rollbar.dart' as rollbar;
 
 import 'package:pawcus/core/logger.dart';
@@ -12,7 +15,6 @@ import 'package:pawcus/core/router/router.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/services/auth_service.dart';
 import 'firebase_options.dart';
-
 
 Future<void> main() async {
   // revisar si flutter inicializó correctamente
@@ -23,9 +25,7 @@ Future<void> main() async {
 
   await setupLogging(configuration);
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // mantener la posición de la pantalla de forma vertical
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -42,12 +42,22 @@ Future<void> main() async {
   }
 }
 
+@pragma("vm:entry-point")
+void overlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DeepFocusOverlay(),
+    ),
+  );
+}
 
 Future<void> runWithRollbar(AppConfiguration configuration, MyApp app) async {
   final config = rollbar.Config(
     accessToken: configuration.rollbarAccessToken!,
     environment: configuration.environment.toString(),
-    codeVersion:  configuration.rollbarCodeVersion,
+    codeVersion: configuration.rollbarCodeVersion,
     handleUncaughtErrors: true,
     includePlatformLogs: true,
     framework: 'flutter',
@@ -56,11 +66,17 @@ Future<void> runWithRollbar(AppConfiguration configuration, MyApp app) async {
   await rollbar.RollbarFlutter.run(config, () => runApp(app));
 }
 
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-  final GoRouter router = AppRouter(authService: FirebaseAuthService()).router();
+class _MyAppState extends State<MyApp> {
+  final GoRouter router = AppRouter(
+    authService: FirebaseAuthService(),
+  ).router();
 
   @override
   Widget build(BuildContext context) {
