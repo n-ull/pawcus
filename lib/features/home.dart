@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         items: const [
           Icon(CupertinoIcons.paw_solid),
-          Icon(CupertinoIcons.cloud),
+          Icon(Icons.timer),
           Icon(CupertinoIcons.gear_solid),
           Icon(CupertinoIcons.arrow_right_circle_fill),
         ],
