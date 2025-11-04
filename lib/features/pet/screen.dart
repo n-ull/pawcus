@@ -28,6 +28,7 @@ class _PetScreenState extends State<PetScreen> {
 
   Future<void> _loadPet() async {
     final pet = await widget.petRepository.getPet() ?? widget.petRepository.getDefaultPet();
+    if (!mounted) return;
     setState(() {
       _pet = pet;
       _loading = false;
@@ -111,19 +112,17 @@ class _PetScreenState extends State<PetScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      widget.petRepository.addExp(_pet, -10);
-                    });
+                  onPressed: () async {
+                    final newPet = await widget.petRepository.addExp(_pet, -10);
+                    setState(() => _pet = newPet);
                   },
                   child: Text('-10 exp'),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      widget.petRepository.addExp(_pet, 10);
-                    });
+                  onPressed: () async {
+                    final newPet = await widget.petRepository.addExp(_pet, 10);
+                    setState(() => _pet = newPet);
                   },
                   child: Text('+10 exp'),
                 ),

@@ -2,11 +2,11 @@ class Pet {
   final String id;
   final String name;
   final PetStats petStats;
-  DateTime lastUpdate;
-  int level;
-  double experience;
+  final DateTime lastUpdate;
+  final int level;
+  final double experience;
 
-  Pet({
+  const Pet({
     required this.id,
     required this.name,
     required this.lastUpdate,
@@ -15,11 +15,13 @@ class Pet {
     this.experience = 0,
   });
 
-  Pet copyWith({DateTime? lastUpdate, PetStats? petStats}) {
+  Pet copyWith({DateTime? lastUpdate, PetStats? petStats, int? level, double? experience}) {
     return Pet(
       id: id,
       name: name,
       lastUpdate: lastUpdate ?? this.lastUpdate,
+      level: level ?? this.level,
+      experience: experience ?? this.experience,
       petStats: petStats ?? this.petStats
     );
   }
@@ -29,6 +31,8 @@ class Pet {
       'id': id,
       'name': name,
       'lastUpdate': lastUpdate.millisecondsSinceEpoch,
+      'level': level,
+      'experience': experience,
       'petStats': petStats.toMap(),
     };
   }
@@ -38,6 +42,8 @@ class Pet {
       id: map['id'],
       name: map['name'],
       lastUpdate: DateTime.fromMillisecondsSinceEpoch(map['lastUpdate']),
+      level: map['level'],
+      experience: map['experience'],
       petStats: PetStats.fromMap(map['petStats']),
     );
   }
@@ -52,7 +58,7 @@ class PetStats {
   final double sleep; // 0.0 - 1.0
   final double hygiene; // 0.0 - 1.0
 
-  PetStats({
+  const PetStats({
     required this.happiness,
     required this.energy,
     required this.hunger,

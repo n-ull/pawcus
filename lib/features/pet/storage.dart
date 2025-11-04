@@ -30,6 +30,7 @@ class SharedPrefsPetStorage implements PetStorage {
     await prefs.setInt(_keyFor('level'), pet.level);
     await prefs.setDouble(_keyFor('experience'), pet.experience);
     await prefs.setInt(_keyFor('lastUpdate'), pet.lastUpdate.millisecondsSinceEpoch);
+    await savePetStats(pet.petStats);
   }
 
   @override

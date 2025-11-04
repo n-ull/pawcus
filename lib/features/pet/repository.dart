@@ -17,9 +17,10 @@ class PetRepository {
     }
   }
 
-  Future<void> savePet(Pet pet) async {
-    pet.lastUpdate = DateTime.now();
-    await storage.save(pet);
+  Future<Pet> savePet(Pet pet) async {
+    final newPet = pet.copyWith(lastUpdate: DateTime.now());
+    await storage.save(newPet);
+    return newPet;
   }
 
   double getExpPercentage(Pet pet) {
@@ -46,19 +47,22 @@ class PetRepository {
     );
   }
 
-  Future<void> addExp(Pet pet, double exp) async {
-    pet.experience += exp;
-    if (pet.experience > getExpRequired(pet)) {
-      pet.level++;
-      pet.experience = 0;
-    } else if (pet.experience < 0) {
-      if (pet.level > 1) {
-        pet.level--;
-        pet.experience = getExpRequired(pet).toDouble();
+  Future<Pet> addExp(Pet pet, double exp) async {
+    double newExp = pet.experience + exp;
+    int newLevel = pet.level;
+    if (newExp > getExpRequired(pet)) {
+      newLevel++;
+      newExp = 0;
+    } else if (newExp < 0) {
+      if (newLevel > 1) {
+        newLevel--;
+        newExp = getExpRequired(pet.copyWith(level: newLevel)).toDouble();
       } else {
-        pet.experience = 0;
+        newExp = 0;
       }
     }
-    await savePet(pet);
+    final updatedPet = pet.copyWith(level: newLevel, experience: newExp);
+    await savePet(updatedPet);
+    return updatedPet;
   }
 }
