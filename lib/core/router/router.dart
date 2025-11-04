@@ -4,7 +4,6 @@ import 'package:go_router_plus/go_router_plus.dart';
 import 'package:pawcus/core/router/routes.dart';
 import 'package:pawcus/features/home.dart';
 import 'package:pawcus/features/login.dart';
-import 'package:pawcus/features/permissions/permissions_screen.dart';
 import 'package:pawcus/services/auth_service.dart';
 
 
@@ -43,13 +42,6 @@ class AppRouter {
           path: Routes.login.path,
           name: Routes.login.name,
           builder: (context, state) => const AuthScreen(),
-        ),
-        GoRoute(
-          path: Routes.permissions.path,
-          name: Routes.permissions.name,
-          builder: (context, state) {
-            return const PermissionsScreen();
-          },
         ),
       ],
     );
