@@ -92,7 +92,7 @@ class FirebaseAuthService implements AuthService {
     } on FirebaseAuthException catch (e) {
       throw AuthException(e.message ?? e.code);
     } catch (_) {
-      throw const AuthException('An unexpected error occurred durign sign out');
+      throw const AuthException('An unexpected error occurred during sign out');
     }
   }
 
