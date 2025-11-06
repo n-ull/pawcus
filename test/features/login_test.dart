@@ -93,6 +93,8 @@ void main() {
 
     testWidgets('Correct credentials sign in succesfully', (tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 2000)); // ✅ prevent overflow
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       await loadApp(tester);
 
       await tester.enterText(find.widgetWithText(TextFormField, 'you@example.com'), testUserEmail);
@@ -159,6 +161,7 @@ void main() {
 
     testWidgets('Correct credentials sign up succesfully', (tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 2000)); // ✅ prevent overflow
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       await loadSignUp(tester);
 
       await tester.enterText(find.widgetWithText(TextFormField, 'you@example.com'), 'other-email@example.com');
