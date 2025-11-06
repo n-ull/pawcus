@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 
 import 'package:pawcus/core/components/password_field.dart';
-import 'package:pawcus/core/hooks/show_scaffold_message.dart';
 import 'package:pawcus/core/router/routes.dart';
+import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/core/validators.dart';
 import 'package:pawcus/services/auth_service.dart';
 
@@ -33,7 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final _authService = FirebaseAuthService();
+  final _authService = sl<AuthService>();
   bool _loading = false;
   late AuthAction currentAction;
 
