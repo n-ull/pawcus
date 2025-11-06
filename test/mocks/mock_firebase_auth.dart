@@ -4,11 +4,13 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 
 class TestFirebaseAuth extends MockFirebaseAuth {
   final Set<String> _validUsers = {};
+  final Set<String> _existingEmails = {};
 
   TestFirebaseAuth({super.signedIn, super.mockUser});
 
   void addValidUser(String email, String password) {
     _validUsers.add('$email:$password');
+    _existingEmails.add(email);
   }
 
   @override
@@ -32,8 +34,10 @@ class TestFirebaseAuth extends MockFirebaseAuth {
     required String email,
     required String password,
   }) async {
-    final userKey = '$email:$password';
-    _validUsers.add(userKey);
+    if (_existingEmails.contains(email)) {
+      throw FirebaseAuthException(code: 'email-already-in-use', message: 'email-already-in-use');
+    }
+    addValidUser(email, password);
     return super.createUserWithEmailAndPassword(
       email: email,
       password: password,
