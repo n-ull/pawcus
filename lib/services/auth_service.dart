@@ -87,7 +87,7 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<void> signOut() async {
-    throw UnimplementedError('Sign out is not yet implemented');
+    await _auth.signOut();
   }
 
   @override
