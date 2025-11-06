@@ -14,3 +14,10 @@ logger.info("This is an information log.");
 logger.severe("Something bad happened");
 logger.fine("Just debugging");
 ```
+
+
+## Run tests
+
+```shell
+flutter test
+```

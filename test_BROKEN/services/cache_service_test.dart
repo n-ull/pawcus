@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pawcus/core/models/pet.dart';
 import 'package:pawcus/core/models/pet_stats.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
-import '../mocks/fake_cache_service.dart';
+import '../../test/mocks/fake_cache_service.dart';
 
 void main() {
   late FakeCacheClient fakeClient;
