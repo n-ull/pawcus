@@ -33,13 +33,14 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final _authService = sl<AuthService>();
   bool _loading = false;
+  late final AuthService _authService;
   late AuthAction currentAction;
 
   @override
   void initState() {
     super.initState();
+    _authService = sl<AuthService>();
     currentAction = widget.action;
   }
 

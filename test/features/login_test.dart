@@ -13,8 +13,8 @@ import '../mocks/mock_firebase_auth.dart';
 
 
 void main() {
-  final testUserEmail = 'test@example.com';
-  final testUserPassword = 'password';
+  const testUserEmail = 'test@example.com';
+  const testUserPassword = 'password';
   late final AuthService auth;
 
   setUpAll(() async {
