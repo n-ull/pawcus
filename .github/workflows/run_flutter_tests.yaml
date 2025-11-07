@@ -24,5 +24,14 @@ jobs:
 
       - name: Run Flutter tests
         run: |
-          cp .env.example .env
+          set -e
+          if [ ! -f .env.example ]; then
+            echo "Error .env.example not found!"
+            exit 1
+          fi
+          if [ ! -f mock_firebase_options.dart ]; then
+            echo "Error mock_firebase_options.dart not found!"
+            exit 1
+          fi
+          cp mock_firebase_options.dart lib/firebase_options.dart
           flutter test
