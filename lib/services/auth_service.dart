@@ -87,7 +87,13 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<void> signOut() async {
-    throw UnimplementedError('Sign out is not yet implemented');
+    try {
+      await _auth.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? e.code);
+    } catch (_) {
+      throw const AuthException('An unexpected error occurred during sign out');
+    }
   }
 
   @override

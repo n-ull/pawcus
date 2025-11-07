@@ -2,15 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 
 import 'package:pawcus/core/router/routes.dart';
+import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/home.dart';
 import 'package:pawcus/features/login.dart';
 import 'package:pawcus/services/auth_service.dart';
 
 
 class AppRouter {
-  final AuthService authService;
-
-  AppRouter({required this.authService});
+  final AuthService authService = sl<AuthService>();
 
   GoRouter router() {
     return GoRouter(
