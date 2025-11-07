@@ -30,9 +30,12 @@ jobs:
             echo "Error .env.example not found!"
             exit 1
           fi
+          cp .env.example .env
+
           if [ ! -f mock_firebase_options.dart ]; then
             echo "Error mock_firebase_options.dart not found!"
             exit 1
           fi
           cp mock_firebase_options.dart lib/firebase_options.dart
+
           flutter test
