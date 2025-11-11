@@ -5,6 +5,7 @@ import 'package:pawcus/features/pet/models.dart';
 
 import '../mocks/fake_cache_service.dart';
 
+
 void main() {
   late FakeCacheClient fakeClient;
   late CacheService cacheService;
@@ -18,7 +19,7 @@ void main() {
         id: 'p-1',
         name: 'Erbcito',
         lastUpdate: DateTime.fromMillisecondsSinceEpoch(1000),
-        petStat: PetStats(
+        petStats: PetStats(
           happiness: 0.5,
           energy: 0.5,
           hunger: 0.5,
