@@ -9,7 +9,7 @@ import 'package:pawcus/core/models/settings.dart';
 typedef RollbarLevel = rollbar_common.Level;
 
 
-final Logger logger = Logger('Qoxaria');
+final Logger logger = Logger('Pawcus');
 
 
 const logHandlers = {
