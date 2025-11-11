@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/login.dart';
-import 'package:pawcus/features/pet/pet_screen.dart';
+import 'package:pawcus/features/pet/screen.dart';
 import 'package:pawcus/main.dart';
 import 'package:pawcus/services/auth_service.dart';
 

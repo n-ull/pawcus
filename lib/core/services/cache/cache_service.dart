@@ -1,7 +1,7 @@
-import 'package:pawcus/core/models/pet.dart';
-import 'package:pawcus/core/models/pet_stats.dart';
-import 'package:pawcus/core/models/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:pawcus/core/models/settings.dart';
+import 'package:pawcus/features/pet/models.dart';
 
 class CacheService {
   final SharedPreferences prefs;
@@ -34,7 +34,7 @@ class CacheService {
         ? DateTime.tryParse(prefs.getString('lastUpdate')!) ?? DateTime.now()
         : DateTime.now();
 
-    return Pet(id: id, name: name, lastUpdate: lastUpdate, petStat: petStats);
+    return Pet(id: id, name: name, lastUpdate: lastUpdate, petStats: petStats);
   }
 
   Future<void> savePetStats(PetStats petStats) async {
@@ -50,7 +50,7 @@ class CacheService {
 
   Future<void> savePet(Pet pet) async {
     await Future.wait([
-      savePetStats(pet.petStat),
+      savePetStats(pet.petStats),
       prefs.setString('name', pet.name),
       prefs.setString('id', pet.id),
       prefs.setString('lastUpdate', pet.lastUpdate.toIso8601String()),

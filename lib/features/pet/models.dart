@@ -1,3 +1,57 @@
+class Pet {
+  final String id;
+  final String name;
+  final PetStats petStats;
+  final DateTime lastUpdate;
+  final int level;
+  final double experience;
+
+  const Pet({
+    required this.id,
+    required this.name,
+    required this.lastUpdate,
+    required this.petStats,
+    this.level = 1,
+    this.experience = 0,
+  });
+
+  Pet copyWith({DateTime? lastUpdate, PetStats? petStats, int? level, double? experience}) {
+    return Pet(
+      id: id,
+      name: name,
+      lastUpdate: lastUpdate ?? this.lastUpdate,
+      level: level ?? this.level,
+      experience: experience ?? this.experience,
+      petStats: petStats ?? this.petStats
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'lastUpdate': lastUpdate.millisecondsSinceEpoch,
+      'level': level,
+      'experience': experience,
+      'petStats': petStats.toMap(),
+    };
+  }
+
+  static Pet fromMap(Map<String, dynamic> map) {
+    return Pet(
+      id: map['id'],
+      name: map['name'],
+      lastUpdate: DateTime.fromMillisecondsSinceEpoch(map['lastUpdate']),
+      level: (map['level'] as int?) ?? 1,
+      experience: ((map['experience'] as num?) ?? 0).toDouble(),
+      petStats: map['petStats'] != null
+        ? PetStats.fromMap(map['petStats'] as Map<String, dynamic>)
+        : const PetStats(happiness: 0.5, energy: 0.5, hunger: 0.5, thirst: 0.5, sleep: 0.5, hygiene: 0.5),
+    );
+  }
+}
+
+
 class PetStats {
   final double happiness; // 0.0 - 1.0
   final double energy; // 0.0 - 1.0
@@ -6,7 +60,7 @@ class PetStats {
   final double sleep; // 0.0 - 1.0
   final double hygiene; // 0.0 - 1.0
 
-  PetStats({
+  const PetStats({
     required this.happiness,
     required this.energy,
     required this.hunger,

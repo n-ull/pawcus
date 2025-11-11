@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:pawcus/core/models/pet.dart';
-import 'package:pawcus/core/models/pet_stats.dart';
 import 'package:pawcus/core/services/app_usage_service.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
+import 'package:pawcus/features/pet/models.dart';
 
 class PetService {
   late final ValueNotifier<Pet> pet;
@@ -36,7 +35,7 @@ class PetService {
 
   Future<void> updatePetStats(PetStats newStats) async {
     pet.value = pet.value.copyWith(
-      petStat: newStats,
+      petStats: newStats,
       lastUpdate: DateTime.now(),
     );
     await _savePet();
@@ -64,7 +63,7 @@ class PetService {
     // - Otherwise, slightly increase happiness/energy.
     final totalUsageSeconds = usage.fold<int>(0, (s, e) => s + e.usageSeconds);
 
-    final currentStats = pet.value.petStat;
+    final currentStats = pet.value.petStats;
     double newHappiness = currentStats.happiness;
     double newEnergy = currentStats.energy;
 

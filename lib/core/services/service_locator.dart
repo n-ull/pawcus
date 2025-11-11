@@ -1,13 +1,16 @@
 import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:pawcus/core/services/app_usage_service.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
 import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/settings_service.dart';
+import 'package:pawcus/features/pet/repository.dart';
+import 'package:pawcus/features/pet/storage.dart';
 import 'package:pawcus/services/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -50,5 +53,6 @@ Future<void> setupServiceLocator({
     return svc;
   });
 
+  sl.registerSingleton(PetRepository(storage: SharedPrefsPetStorage()));
   await sl.isReady<PetService>();
 }
