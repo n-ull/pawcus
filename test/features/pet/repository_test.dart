@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pawcus/features/pet/models.dart';
@@ -132,10 +131,10 @@ void main() {
       });
     });
 
-    test('getDefaultPet returns a valid instance', () {
+    test('getDefaultPet returns a valid instance', () async {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       // Make sure timestamp is smaller than default DateTime.now()
-      sleep(const Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 10));
       final defaultPet = repository.getDefaultPet();
 
       expect(defaultPet, isA<Pet>());

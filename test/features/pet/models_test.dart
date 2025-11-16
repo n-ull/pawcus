@@ -55,7 +55,7 @@ void main() {
       expect(petMap['lastUpdate'], DateTime(2025, 11, 11).millisecondsSinceEpoch);
       expect(petMap['level'], 5);
       expect(petMap['experience'], 83);
-      expect(petMap['petStats'], isA<Map<String, dynamic>>());
+      expect(petMap['petStats'], isA<Map<String, double>>());
     });
 
     test('fromMap correctly loads all information', () {
