@@ -45,7 +45,7 @@ class Pet {
       level: (map['level'] as int?) ?? 1,
       experience: ((map['experience'] as num?) ?? 0).toDouble(),
       petStats: map['petStats'] != null
-        ? PetStats.fromMap(map['petStats'] as Map<String, dynamic>)
+        ? PetStats.fromMap(map['petStats'] as Map<String, num>)
         : const PetStats(happiness: 0.5, energy: 0.5, hunger: 0.5, thirst: 0.5, sleep: 0.5, hygiene: 0.5),
     );
   }
@@ -92,7 +92,7 @@ class PetStats {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, double> toMap() {
     return {
       'happiness': happiness,
       'energy': energy,
@@ -103,14 +103,14 @@ class PetStats {
     };
   }
 
-  static PetStats fromMap(Map<String, dynamic> map) {
+  static PetStats fromMap(Map<String, num> map) {
     return PetStats(
-      happiness: map['happiness'],
-      energy: map['energy'],
-      hunger: map['hunger'],
-      thirst: map['thirst'],
-      sleep: map['sleep'],
-      hygiene: map['hygiene'],
+      happiness: map['happiness']!.toDouble(),
+      energy: map['energy']!.toDouble(),
+      hunger: map['hunger']!.toDouble(),
+      thirst: map['thirst']!.toDouble(),
+      sleep: map['sleep']!.toDouble(),
+      hygiene: map['hygiene']!.toDouble(),
     );
   }
 }
