@@ -5,10 +5,10 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:go_router_plus/go_router_plus.dart';
 
 import 'package:pawcus/core/models/app_usage_entry.dart';
-import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/focus/focus_screen.dart';
-import 'package:pawcus/features/pet/pet_screen.dart';
+import 'package:pawcus/features/pet/service.dart';
+import 'package:pawcus/features/pet/screen.dart';
 import 'package:pawcus/features/settings/settings_screen.dart';
 
 
@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final pet = sl<PetService>().pet;
+  final petService = sl<PetService>();
 
   int _currentIndex = 0;
   
@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody() {
     return <Widget>[
-      PetScreen(pet: pet, experiencePercentage: 50),
+      PetScreen(petService: petService),
       FocusScreen(),
       SettingsScreen(),
     ][_currentIndex];

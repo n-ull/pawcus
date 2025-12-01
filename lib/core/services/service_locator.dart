@@ -1,13 +1,13 @@
-import 'dart:developer';
-
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:pawcus/core/services/app_usage_service.dart';
 import 'package:pawcus/core/services/cache/cache_service.dart';
 import 'package:pawcus/core/services/permissions_service.dart';
-import 'package:pawcus/core/services/pet_service.dart';
 import 'package:pawcus/core/services/settings_service.dart';
+import 'package:pawcus/features/pet/service.dart';
+import 'package:pawcus/features/pet/storage.dart';
 import 'package:pawcus/services/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -15,8 +15,10 @@ Future<void> setupServiceLocator({
   AuthService? authService,
 }) async {
   // Load Dependencies
-  sl.registerSingleton(AppUsageService());
-  sl.registerSingleton(PermissionsService());
+  final appUsageService = AppUsageService();
+  final permissionsService = PermissionsService();
+  sl.registerSingleton(appUsageService);
+  sl.registerSingleton(permissionsService);
   sl.registerSingleton<AuthService>(authService ?? FirebaseAuthService());
 
   sl.registerSingletonAsync<CacheService>(() async {
@@ -25,30 +27,13 @@ Future<void> setupServiceLocator({
 
     return svc;
   });
-
   await sl.isReady<CacheService>();
-
   sl.registerLazySingleton<SettingsService>(
     () => SettingsService(sl<CacheService>()),
   );
 
   // Init PetService
-  sl.registerSingletonAsync<PetService>(() async {
-    final svc = PetService(
-      sl<AppUsageService>(),
-      sl<PermissionsService>(),
-      sl<CacheService>(),
-    );
-
-    try {
-      await svc.init();
-    } catch (e, stackTrace) {
-      log('Failed to initialize PetService: $e\n$stackTrace');
-      rethrow;
-    }
-
-    return svc;
-  });
-
-  await sl.isReady<PetService>();
+  final legacyPetService = LegacyPetService(appUsageService, permissionsService);
+  sl.registerSingleton(legacyPetService);
+  sl.registerSingleton(PetService(storage: SharedPrefsPetStorage(), legacyService: legacyPetService));
 }
