@@ -49,12 +49,12 @@ class LegacyPetService {
 
     if (totalUsageSeconds > thresholdSeconds) {
       // heavy usage -> penalty
-      newHappiness = (newHappiness - happinessPenalty).clamp(0.0, 1.0);
-      newEnergy = (newEnergy - energyPenalty).clamp(0.0, 1.0);
+      newHappiness = (newHappiness - happinessPenalty).clamp(0.0, 1.0).toDouble();
+      newEnergy = (newEnergy - energyPenalty).clamp(0.0, 1.0).toDouble();
     } else {
       // light usage -> reward
-      newHappiness = (newHappiness + happinessReward).clamp(0.0, 1.0);
-      newEnergy = (newEnergy + energyReward).clamp(0.0, 1.0);
+      newHappiness = (newHappiness + happinessReward).clamp(0.0, 1.0).toDouble();
+      newEnergy = (newEnergy + energyReward).clamp(0.0, 1.0).toDouble();
     }
 
     return currentStats.copyWith(
@@ -87,7 +87,7 @@ class PetService {
   }
 
   double getExpPercentage(Pet pet) {
-    return (pet.experience * 100 / getExpRequired(pet)).clamp(0, 100);
+    return (pet.experience * 100 / getExpRequired(pet)).clamp(0, 100).toDouble();
   }
 
   int getExpRequired(Pet pet) {
@@ -125,8 +125,7 @@ class PetService {
       }
     }
     final updatedPet = pet.copyWith(level: newLevel, experience: newExp);
-    await savePet(updatedPet);
-    return updatedPet;
+    return savePet(updatedPet);
   }
 
   Future<Pet> updatePet(Pet pet, {int? level, double? experience, PetStats? stats}) async {
@@ -136,8 +135,7 @@ class PetService {
       experience: experience,
       petStats: stats,
     );
-    await savePet(newPet);
-    return newPet;
+    return savePet(newPet);
   }
 
   Future<Pet> checkDailyAppUsage(Pet pet) async {

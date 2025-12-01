@@ -23,7 +23,7 @@ void main() {
     await setupServiceLocator(authService: auth);
   });
 
-  Future<void> loadApp(tester) async {
+  Future<void> loadApp(WidgetTester tester) async {
     await tester.pumpWidget(MyApp());
     await tester.pumpAndSettle();
   }

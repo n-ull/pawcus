@@ -14,9 +14,9 @@ import '../../mocks/mock_firebase_auth.dart';
 void main() {
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
+    TestWidgetsFlutterBinding.ensureInitialized();
     final auth = FirebaseAuthService(auth: TestFirebaseAuth());
     await setupServiceLocator(authService: auth);
-    TestWidgetsFlutterBinding.ensureInitialized();
   });
 
   group('PetService', () {
@@ -166,7 +166,7 @@ void main() {
         expect(newPet.experience, 15);
       });
 
-      test('simple substract case without leveling up', () async {
+      test('simple subtract case without leveling down', () async {
         final newPet = await service.addExp(pet.copyWith(level: 1, experience: 10), -5);
         expect(newPet.level, 1);
         expect(newPet.experience, 5);
