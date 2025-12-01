@@ -130,7 +130,6 @@ class PetService {
 
   Future<Pet> updatePet(Pet pet, {int? level, double? experience, PetStats? stats}) async {
     final newPet = pet.copyWith(
-      lastUpdate: DateTime.now(),
       level: level,
       experience: experience,
       petStats: stats,
