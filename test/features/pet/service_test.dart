@@ -1,23 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pawcus/core/services/service_locator.dart';
+import 'package:pawcus/services/auth_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pawcus/features/pet/models.dart';
 import 'package:pawcus/features/pet/storage.dart';
-import 'package:pawcus/features/pet/repository.dart';
+import 'package:pawcus/features/pet/service.dart';
+
+import '../../mocks/mock_firebase_auth.dart';
 
 
 void main() {
-  setUpAll(() {
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+    final auth = FirebaseAuthService(auth: TestFirebaseAuth());
+    await setupServiceLocator(authService: auth);
     TestWidgetsFlutterBinding.ensureInitialized();
   });
 
-  group('PetRepository', () {
+  group('PetService', () {
     late Pet pet;
-    late PetRepository repository;
+    late PetService service;
 
-    setUp(() {
-      SharedPreferences.setMockInitialValues({});
+    setUp(() async {
       final petStats = PetStats(happiness: 1, energy: 0.3, hunger: 0, thirst: 0.62, sleep: 0.13, hygiene: 0.27);
       pet = Pet(
           id: '1',
@@ -27,18 +33,18 @@ void main() {
           level: 5,
           experience: 83,
         );
-        repository = PetRepository(storage: SharedPrefsPetStorage());
+        service = PetService(storage: SharedPrefsPetStorage(), legacyService: sl<LegacyPetService>());
     });
 
     group('getPet', () {
       test('returns null when nothing is stored', () async {
-        final loadedPet = await repository.getPet();
+        final loadedPet = await service.getPet();
         expect(loadedPet, isNull);
       });
 
       test('correctly loads the pet data', () async {
-        await repository.storage.save(pet);
-        final loadedPet = (await repository.getPet())!;
+        await service.storage.save(pet);
+        final loadedPet = (await service.getPet())!;
         expect(loadedPet, isA<Pet>());
         expect(loadedPet.id, pet.id);
         expect(loadedPet.name, pet.name);
@@ -56,7 +62,7 @@ void main() {
     });
 
     test('savePet correctly dumps the model', () async {
-      final savedPet = await repository.savePet(pet);
+      final savedPet = await service.savePet(pet);
       final prefs = await SharedPreferences.getInstance();
       final prefix = 'PET__';
       final statsPrefix = '${prefix}STATS__';
@@ -79,53 +85,53 @@ void main() {
 
     group('getExpRequired', () {
       test('getExpRequired returns 100 for level 1', () {
-        expect(repository.getExpRequired(pet.copyWith(level: 1)), 100);
+        expect(service.getExpRequired(pet.copyWith(level: 1)), 100);
       });
 
       test('getExpRequired increases by 10 per level', () {
-        expect(repository.getExpRequired(pet.copyWith(level: 2)), 110);
-        expect(repository.getExpRequired(pet.copyWith(level: 5)), 140);
-        expect(repository.getExpRequired(pet.copyWith(level: 23)), 320);
-        expect(repository.getExpRequired(pet.copyWith(level: 132)), 1410);
+        expect(service.getExpRequired(pet.copyWith(level: 2)), 110);
+        expect(service.getExpRequired(pet.copyWith(level: 5)), 140);
+        expect(service.getExpRequired(pet.copyWith(level: 23)), 320);
+        expect(service.getExpRequired(pet.copyWith(level: 132)), 1410);
       });
 
       test('getExpRequired is linear and monotonic', () {
         expect(
-          repository.getExpRequired(pet.copyWith(level: 19)),
-          greaterThan(repository.getExpRequired(pet.copyWith(level: 18))),
+          service.getExpRequired(pet.copyWith(level: 19)),
+          greaterThan(service.getExpRequired(pet.copyWith(level: 18))),
         );
       });
     });
 
     group('getExpPercentage', () {
       test('getExpPercentage returns 0% at start', () {
-        expect(repository.getExpPercentage(pet.copyWith(level: 1, experience: 0)), 0);
-        expect(repository.getExpPercentage(pet.copyWith(level: 23, experience: 0)), 0);
+        expect(service.getExpPercentage(pet.copyWith(level: 1, experience: 0)), 0);
+        expect(service.getExpPercentage(pet.copyWith(level: 23, experience: 0)), 0);
       });
 
       test('getExpPercentage returns 50% at halfway', () {
-        expect(repository.getExpPercentage(pet.copyWith(level: 1, experience: 50)), 50);
-        expect(repository.getExpPercentage(pet.copyWith(level: 23, experience: 160)), 50);
+        expect(service.getExpPercentage(pet.copyWith(level: 1, experience: 50)), 50);
+        expect(service.getExpPercentage(pet.copyWith(level: 23, experience: 160)), 50);
       });
 
       test('getExpPercentage returns 100% when threshold is met', () {
-        expect(repository.getExpPercentage(pet.copyWith(level: 1, experience: 100)), 100);
-        expect(repository.getExpPercentage(pet.copyWith(level: 32, experience: 410)), 100);
+        expect(service.getExpPercentage(pet.copyWith(level: 1, experience: 100)), 100);
+        expect(service.getExpPercentage(pet.copyWith(level: 32, experience: 410)), 100);
       });
 
       test('getExpPercentage clamps overflows to 100', () {
-        expect(repository.getExpPercentage(pet.copyWith(level: 1, experience: 140)), 100);
-        expect(repository.getExpPercentage(pet.copyWith(level: 5, experience: 8000)), 100);
+        expect(service.getExpPercentage(pet.copyWith(level: 1, experience: 140)), 100);
+        expect(service.getExpPercentage(pet.copyWith(level: 5, experience: 8000)), 100);
       });
 
       test('getExpPercentage clamps negative experience to 0', () {
-        expect(repository.getExpPercentage(pet.copyWith(level: 1, experience: -20)), 0);
-        expect(repository.getExpPercentage(pet.copyWith(level: 8, experience: -128)), 0);
+        expect(service.getExpPercentage(pet.copyWith(level: 1, experience: -20)), 0);
+        expect(service.getExpPercentage(pet.copyWith(level: 8, experience: -128)), 0);
       });
 
       test('getExpPercentage uses level-aware required exp', () {
-        final experienceNeededAt3 = repository.getExpPercentage(pet.copyWith(level: 3, experience: 30));
-        final experienceNeededAt5 = repository.getExpPercentage(pet.copyWith(level: 5, experience: 30));
+        final experienceNeededAt3 = service.getExpPercentage(pet.copyWith(level: 3, experience: 30));
+        final experienceNeededAt5 = service.getExpPercentage(pet.copyWith(level: 5, experience: 30));
         expect(experienceNeededAt3, isNot(equals(experienceNeededAt5)));
         expect(experienceNeededAt3, greaterThan(experienceNeededAt5));
       });
@@ -135,7 +141,7 @@ void main() {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       // Make sure timestamp is smaller than default DateTime.now()
       await Future.delayed(const Duration(milliseconds: 10));
-      final defaultPet = repository.getDefaultPet();
+      final defaultPet = service.getDefaultPet();
 
       expect(defaultPet, isA<Pet>());
       expect(defaultPet.id, 'p-1');
@@ -155,53 +161,53 @@ void main() {
 
     group('addExp', () {
       test('simple add case without leveling up', () async {
-        final newPet = await repository.addExp(pet.copyWith(level: 1, experience: 10), 5);
+        final newPet = await service.addExp(pet.copyWith(level: 1, experience: 10), 5);
         expect(newPet.level, 1);
         expect(newPet.experience, 15);
       });
 
       test('simple substract case without leveling up', () async {
-        final newPet = await repository.addExp(pet.copyWith(level: 1, experience: 10), -5);
+        final newPet = await service.addExp(pet.copyWith(level: 1, experience: 10), -5);
         expect(newPet.level, 1);
         expect(newPet.experience, 5);
       });
 
       test('correctly sets level and experience when leveling up', () async {
-        Pet newPet = await repository.addExp(pet.copyWith(level: 1, experience: 10), 91);
+        Pet newPet = await service.addExp(pet.copyWith(level: 1, experience: 10), 91);
         expect(newPet.level, 2);
         expect(newPet.experience, 0);
 
-        newPet = await repository.addExp(pet.copyWith(level: 120, experience: 1280), 11);
+        newPet = await service.addExp(pet.copyWith(level: 120, experience: 1280), 11);
         expect(newPet.level, 121);
         expect(newPet.experience, 0);
       });
 
       test('level will not bump if experience exactly meets the upper threshold', () async {
-        Pet newPet = await repository.addExp(pet.copyWith(level: 1, experience: 10), 90);
+        Pet newPet = await service.addExp(pet.copyWith(level: 1, experience: 10), 90);
         expect(newPet.level, 1);
         expect(newPet.experience, 100);
 
-        newPet = await repository.addExp(pet.copyWith(level: 120, experience: 1280), 10);
+        newPet = await service.addExp(pet.copyWith(level: 120, experience: 1280), 10);
         expect(newPet.level, 120);
         expect(newPet.experience, 1290);
       });
 
       test('correctly sets level and experience when leveling down', () async {
-        Pet newPet = await repository.addExp(pet.copyWith(level: 2, experience: 10), -20);
+        Pet newPet = await service.addExp(pet.copyWith(level: 2, experience: 10), -20);
         expect(newPet.level, 1);
         expect(newPet.experience, 100);
 
-        newPet = await repository.addExp(pet.copyWith(level: 121, experience: 280), -281);
+        newPet = await service.addExp(pet.copyWith(level: 121, experience: 280), -281);
         expect(newPet.level, 120);
         expect(newPet.experience, 1290);
       });
 
       test('level will not decrease if experience exactly meets the lower threshold', () async {
-        Pet newPet = await repository.addExp(pet.copyWith(level: 2, experience: 10), -10);
+        Pet newPet = await service.addExp(pet.copyWith(level: 2, experience: 10), -10);
         expect(newPet.level, 2);
         expect(newPet.experience, 0);
 
-        newPet = await repository.addExp(pet.copyWith(level: 121, experience: 80), -80);
+        newPet = await service.addExp(pet.copyWith(level: 121, experience: 80), -80);
         expect(newPet.level, 121);
         expect(newPet.experience, 0);
       });

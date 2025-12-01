@@ -2,16 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pawcus/core/components/stats_row.dart';
-import 'package:pawcus/core/services/pet_service.dart';
-import 'package:pawcus/core/services/service_locator.dart';
 import 'package:pawcus/features/pet/models.dart';
-import 'package:pawcus/features/pet/repository.dart';
+import 'package:pawcus/features/pet/service.dart';
 
 
 class PetScreen extends StatefulWidget {
-  const PetScreen({super.key, required this.petRepository});
+  const PetScreen({super.key, required this.petService});
 
-  final PetRepository petRepository;
+  final PetService petService;
 
   @override
   State<PetScreen> createState() => _PetScreenState();
@@ -28,7 +26,7 @@ class _PetScreenState extends State<PetScreen> {
   }
 
   Future<void> _loadPet() async {
-    final pet = await widget.petRepository.getPet() ?? widget.petRepository.getDefaultPet();
+    final pet = await widget.petService.getPet() ?? widget.petService.getDefaultPet();
     if (!mounted) return;
     setState(() {
       _pet = pet;
@@ -71,10 +69,10 @@ class _PetScreenState extends State<PetScreen> {
             const SizedBox(width: 4),
             Expanded(
               child: LinearProgressIndicator(
-                value: widget.petRepository.getExpPercentage(_pet) / 100,
+                value: widget.petService.getExpPercentage(_pet) / 100,
                 color: Theme.of(context).colorScheme.inversePrimary,
                 semanticsLabel: 'Exp.',
-                semanticsValue: widget.petRepository.getExpPercentage(_pet).toString(),
+                semanticsValue: widget.petService.getExpPercentage(_pet).toString(),
                 minHeight: 16,
               ),
             ),
@@ -86,9 +84,10 @@ class _PetScreenState extends State<PetScreen> {
         children: [
           // reset all stats (it saves the local data)
           IconButton(
-            onPressed: () {
-              sl<PetService>().updatePetStats(
-                PetStats(
+            onPressed: () async {
+              final newPet = await widget.petService.updatePet(
+                _pet,
+                stats: PetStats(
                   happiness: 0,
                   energy: 0,
                   hunger: 0,
@@ -97,6 +96,8 @@ class _PetScreenState extends State<PetScreen> {
                   hygiene: 0,
                 ),
               );
+              if (!mounted) return;
+              setState(() => _pet = newPet);
             },
             icon: Icon(Icons.restore_from_trash),
           ),
@@ -110,8 +111,10 @@ class _PetScreenState extends State<PetScreen> {
         ],
       ),
       ElevatedButton(
-        onPressed: () {
-          sl<PetService>().checkDailyAppUsage();
+        onPressed: () async {
+          final newPet = await widget.petService.checkDailyAppUsage(_pet);
+          if (!mounted) return;
+            setState(() => _pet = newPet);
         },
         child: Text('Check Use Access'),
       ),
@@ -124,7 +127,7 @@ class _PetScreenState extends State<PetScreen> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final newPet = await widget.petRepository.addExp(_pet, -10);
+                final newPet = await widget.petService.addExp(_pet, -10);
                 if (!mounted) return;
                 setState(() => _pet = newPet);
               },
@@ -133,7 +136,7 @@ class _PetScreenState extends State<PetScreen> {
             const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () async {
-                final newPet = await widget.petRepository.addExp(_pet, 10);
+                final newPet = await widget.petService.addExp(_pet, 10);
                 if (!mounted) return;
                 setState(() => _pet = newPet);
               },
